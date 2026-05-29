@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Incident handler's journal kept across lab scenarios and a real-world domain hijack — each entry captures the 5 W's, tools, timeline, and response, mirroring SOC analyst workflow. By Devonte Huckleberry.">
+<title>Incident Handler's Journal — Devonte Huckleberry</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#e63946; --red3:#ff6b6b; --red-glow:rgba(230,57,70,0.18);
+  --bg:#080506; --bg2:#0d0708; --bg3:#120a0b;
+  --border:#231010; --border2:#3a1a1a;
+  --text:#ede0e0; --muted:#6b4040; --muted2:#a07070; --warn:#f39c12; --green:#2ecc71;
+  --display:'Rajdhani',sans-serif; --body:'Outfit',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text); font-family:var(--body); font-weight:300; line-height:1.7;
+  min-height:100vh; padding:0 5% 5rem;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(230,57,70,0.07) 0%, transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M0 80L80 0' stroke='%23231010' stroke-width='0.6'/%3E%3C/svg%3E");
+  background-size:auto,80px 80px; background-attachment:fixed;
+}
+.wrap{max-width:860px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:2rem 0;flex-wrap:wrap;gap:1rem}
+.brand{font-family:var(--display);font-size:1.4rem;font-weight:700;color:#fff;text-decoration:none;letter-spacing:0.04em}
+.brand span{color:var(--red)}
+.back-btn{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--body);font-size:0.82rem;padding:0.6rem 1.3rem;background:transparent;color:var(--muted2);text-decoration:none;border:1px solid var(--border2);letter-spacing:0.06em;transition:all 0.25s;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.back-btn:hover{border-color:var(--red);color:var(--red)}
+.eyebrow{font-family:var(--mono);font-size:0.62rem;color:var(--red);letter-spacing:0.28em;text-transform:uppercase;margin:2.5rem 0 0.85rem;display:flex;align-items:center;gap:0.75rem}
+.eyebrow::before{content:'//';opacity:0.6}
+h1{font-family:var(--display);font-size:clamp(2rem,4.5vw,3rem);font-weight:700;color:#fff;line-height:1.1;letter-spacing:0.02em;margin-bottom:0.75rem}
+.redline{width:56px;height:2px;background:linear-gradient(90deg,var(--red),transparent);margin-bottom:1.5rem}
+p{font-size:0.95rem;color:var(--muted2);line-height:1.9;margin-bottom:1rem}
+.callout{background:var(--bg2);border-left:2px solid var(--red);padding:1.1rem 1.3rem;margin:1.5rem 0 2.5rem;font-size:0.92rem;color:var(--muted2)}
+.entry{background:var(--bg2);border:1px solid var(--border);margin-bottom:2rem;overflow:hidden;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.entry-head{display:flex;align-items:center;gap:0.9rem;flex-wrap:wrap;padding:1.1rem 1.3rem;border-bottom:1px solid var(--border);background:var(--bg3)}
+.entry-no{font-family:var(--mono);font-size:0.6rem;color:var(--red);letter-spacing:0.12em;border:1px solid var(--border2);padding:3px 8px}
+.entry-date{font-family:var(--mono);font-size:0.66rem;color:var(--muted2);letter-spacing:0.06em}
+.entry-kind{margin-left:auto;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 9px}
+.kind-live{color:var(--red);border:1px solid rgba(230,57,70,0.4)}
+.kind-lab{color:var(--green);border:1px solid rgba(46,204,113,0.4)}
+.entry-body{padding:1.3rem}
+.entry-title{font-family:var(--display);font-size:1.25rem;font-weight:600;color:#fff;letter-spacing:0.02em;margin-bottom:0.55rem}
+.entry-body .lbl{font-family:var(--mono);font-size:0.56rem;color:var(--muted);letter-spacing:0.16em;text-transform:uppercase;margin:1.25rem 0 0.4rem}
+.tools{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.3rem}
+.tool{font-family:var(--mono);font-size:0.58rem;color:var(--muted2);background:var(--bg3);border:1px solid var(--border);padding:0.26rem 0.6rem;letter-spacing:0.05em}
+.ws{list-style:none;margin:0.3rem 0 0;display:grid;gap:0.55rem}
+.ws li{font-size:0.9rem;color:var(--muted2);line-height:1.6;padding-left:5.4rem;position:relative}
+.ws li b{position:absolute;left:0;top:0;font-family:var(--mono);font-size:0.6rem;color:var(--red3);letter-spacing:0.08em;text-transform:uppercase}
+.entry-link{display:inline-block;margin-top:1.3rem;font-family:var(--mono);font-size:0.64rem;color:var(--red3);text-decoration:none;border:1px solid rgba(230,57,70,0.25);padding:5px 12px;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s}
+.entry-link:hover{border-color:var(--red);background:rgba(230,57,70,0.08)}
+footer{max-width:860px;margin:3.5rem auto 0;padding-top:2rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:0.66rem;color:var(--muted);letter-spacing:0.08em}
+@media(max-width:540px){.ws li{padding-left:0;padding-top:1.1rem}.ws li b{top:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a href="../index.html" class="brand">Devonte<span>.</span></a>
+    <a href="../index.html" class="back-btn">← Back to Portfolio</a>
+  </div>
+
+  <div class="eyebrow">Case File 05 · IR Documentation</div>
+  <h1>Incident Handler's Journal</h1>
+  <div class="redline"></div>
+
+  <div class="callout">
+    A running journal kept across home-lab scenarios and a real-world incident. Each entry follows the same structure a SOC analyst maintains in a live environment — the <strong style="color:var(--text)">5 W's</strong>, tools used, timeline, and response summary — drawn from the NIST incident-response framework. New entries are added as labs and incidents accumulate.
+  </div>
+
+  <!-- Entry 1 -->
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-no">ENTRY 01</span>
+      <span class="entry-date">May 21, 2026</span>
+      <span class="entry-kind kind-live">Live Incident</span>
+    </div>
+    <div class="entry-body">
+      <div class="entry-title">Domain hijack &amp; malicious redirect — ssumcchicago.org</div>
+      <p>A live church domain was discovered serving a fraudulent gambling platform. I captured and analyzed the traffic, traced the root cause, identified indicators of compromise, and produced a full incident report with remediation steps.</p>
+      <div class="lbl">Tools used</div>
+      <div class="tools"><span class="tool">Wireshark</span><span class="tool">tshark</span><span class="tool">VirusTotal</span><span class="tool">DNS analysis</span><span class="tool">QUIC / TLS</span></div>
+      <div class="lbl">The 5 W's</div>
+      <ul class="ws">
+        <li><b>Who</b> An external actor who gained control of the site's CDN (Cloudflare) account and configuration.</li>
+        <li><b>What</b> A CDN account takeover served attacker-controlled content — a fraudulent gambling site — under the legitimate church domain.</li>
+        <li><b>When</b> Identified and documented on May 21, 2026.</li>
+        <li><b>Where</b> At the CDN configuration layer (Cloudflare), not the origin web server — which is what made it hard to spot from the host alone.</li>
+        <li><b>Why</b> A compromised CDN account allowed the attacker to redirect/serve content under a trusted domain, abusing its reputation.</li>
+      </ul>
+      <div class="lbl">Response summary</div>
+      <p>Ran packet capture to confirm the malicious behavior, correlated IOCs against VirusTotal, isolated the compromise to the CDN config level, and delivered a written incident report with prioritized remediation.</p>
+      <a href="hijack-investigation.html" class="entry-link">Full investigation &amp; evidence →</a>
+    </div>
+  </div>
+
+  <!-- Entry 2 -->
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-no">ENTRY 02</span>
+      <span class="entry-date">2025 · Home Lab</span>
+      <span class="entry-kind kind-lab">Authorized Lab</span>
+    </div>
+    <div class="entry-body">
+      <div class="entry-title">vsftpd 2.3.4 backdoor exploitation — Metasploitable 2</div>
+      <p>An authorized penetration test in an isolated lab: enumeration, identification of a vulnerable service, exploitation, and root access — fully documented end to end.</p>
+      <div class="lbl">Tools used</div>
+      <div class="tools"><span class="tool">Kali Linux</span><span class="tool">Nmap</span><span class="tool">Metasploit</span><span class="tool">CVE-2011-2523</span></div>
+      <div class="lbl">The 5 W's</div>
+      <ul class="ws">
+        <li><b>Who</b> Myself, as the authorized tester — no external party; a closed, host-only lab network.</li>
+        <li><b>What</b> Exploited the vsftpd 2.3.4 backdoor (CVE-2011-2523) to open a root reverse shell.</li>
+        <li><b>When</b> Roughly 15 minutes to exploit; about 4 hours for the full, deliberately documented session.</li>
+        <li><b>Where</b> A Metasploitable 2 VM on an isolated host-only network (Kali Linux ARM via UTM on Apple Silicon).</li>
+        <li><b>Why</b> An intentionally vulnerable service, used to practice the enumeration → exploitation → documentation workflow safely.</li>
+      </ul>
+      <div class="lbl">Response summary</div>
+      <p>Confirmed the vulnerability through service enumeration, exploited it in a controlled way, verified root access, then wrote up the methodology and findings — the same documentation discipline a real engagement requires.</p>
+      <a href="metasploitable-lab.html" class="entry-link">Full lab write-up →</a>
+    </div>
+  </div>
+
+  <!-- Entry 3 -->
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-no">ENTRY 03</span>
+      <span class="entry-date">2024–2025 · TryHackMe</span>
+      <span class="entry-kind kind-lab">Forensics Lab</span>
+    </div>
+    <div class="entry-body">
+      <div class="entry-title">Windows host forensics — artifact reconstruction</div>
+      <p>A hands-on forensics exercise reconstructing user and system activity on a Windows host from on-disk artifacts.</p>
+      <div class="lbl">Tools used</div>
+      <div class="tools"><span class="tool">EZ Tools</span><span class="tool">MFT parsing</span><span class="tool">Prefetch</span><span class="tool">Registry</span><span class="tool">UAC</span></div>
+      <div class="lbl">The 5 W's</div>
+      <ul class="ws">
+        <li><b>Who</b> The host's user account, whose activity I reconstructed from artifacts left behind on disk.</li>
+        <li><b>What</b> Parsed the Master File Table and Prefetch with EZ Tools, navigated the registry, and recovered evidence of program execution and file activity.</li>
+        <li><b>When</b> Across 2024–2025 TryHackMe modules; timeline rebuilt from artifact timestamps.</li>
+        <li><b>Where</b> A Windows lab image — file system, Prefetch, and registry hives.</li>
+        <li><b>Why</b> To build the muscle memory of pulling a coherent timeline out of host artifacts — the core of host-based investigation.</li>
+      </ul>
+      <div class="lbl">Response summary</div>
+      <p>Translated raw artifacts into a readable activity timeline and a short findings note, reinforcing how forensic evidence supports an incident-response narrative.</p>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 Devonte Huckleberry — Chicago, IL.</footer>
+</body>
+</html>
