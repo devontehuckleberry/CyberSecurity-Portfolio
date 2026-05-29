@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SQL filters and joins for security investigations — AND, OR, NOT, and LIKE queries against login and employee records in MariaDB. Work sample by Devonte Huckleberry.">
+<title>SQL Filters &amp; Joins — Security Investigation Queries — Devonte Huckleberry</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#e63946; --red3:#ff6b6b; --red-glow:rgba(230,57,70,0.18);
+  --bg:#080506; --bg2:#0d0708; --bg3:#120a0b;
+  --border:#231010; --border2:#3a1a1a;
+  --text:#ede0e0; --muted:#6b4040; --muted2:#a07070; --warn:#f39c12; --green:#2ecc71;
+  --display:'Rajdhani',sans-serif; --body:'Outfit',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text); font-family:var(--body); font-weight:300; line-height:1.7;
+  min-height:100vh; padding:0 5% 5rem;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(230,57,70,0.07) 0%, transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M0 80L80 0' stroke='%23231010' stroke-width='0.6'/%3E%3C/svg%3E");
+  background-size:auto,80px 80px; background-attachment:fixed;
+}
+.wrap{max-width:860px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:2rem 0;flex-wrap:wrap;gap:1rem}
+.brand{font-family:var(--display);font-size:1.4rem;font-weight:700;color:#fff;text-decoration:none;letter-spacing:0.04em}
+.brand span{color:var(--red)}
+.back-btn{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--body);font-size:0.82rem;padding:0.6rem 1.3rem;background:transparent;color:var(--muted2);text-decoration:none;border:1px solid var(--border2);letter-spacing:0.06em;transition:all 0.25s;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.back-btn:hover{border-color:var(--red);color:var(--red)}
+.eyebrow{font-family:var(--mono);font-size:0.62rem;color:var(--red);letter-spacing:0.28em;text-transform:uppercase;margin:2.5rem 0 0.85rem;display:flex;align-items:center;gap:0.75rem}
+.eyebrow::before{content:'//';opacity:0.6}
+h1{font-family:var(--display);font-size:clamp(2rem,4.5vw,3rem);font-weight:700;color:#fff;line-height:1.1;letter-spacing:0.02em;margin-bottom:0.75rem}
+.redline{width:56px;height:2px;background:linear-gradient(90deg,var(--red),transparent);margin-bottom:1.5rem}
+.tags{display:flex;flex-wrap:wrap;gap:0.45rem;margin-bottom:2rem}
+.tag{font-family:var(--mono);font-size:0.6rem;color:var(--muted2);background:var(--bg3);border:1px solid var(--border);padding:0.3rem 0.65rem;letter-spacing:0.06em}
+h2{font-family:var(--display);font-size:1.5rem;font-weight:600;color:#fff;letter-spacing:0.02em;margin:2.6rem 0 0.4rem}
+h2 .n{color:var(--red);font-family:var(--mono);font-size:0.9rem;margin-right:0.5rem}
+h3{font-family:var(--display);font-size:1.15rem;font-weight:600;color:var(--text);margin:0 0 0.5rem}
+p{font-size:0.95rem;color:var(--muted2);line-height:1.9;margin-bottom:1rem}
+.callout{background:var(--bg2);border-left:2px solid var(--red);padding:1.1rem 1.3rem;margin:1.5rem 0 2rem;font-size:0.92rem;color:var(--muted2)}
+.q{background:var(--bg2);border:1px solid var(--border);margin-bottom:1.5rem;overflow:hidden;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.q-head{display:flex;align-items:center;gap:0.7rem;padding:0.9rem 1.2rem;border-bottom:1px solid var(--border)}
+.q-num{font-family:var(--mono);font-size:0.62rem;color:var(--red);letter-spacing:0.1em}
+.q-title{font-family:var(--display);font-size:1.08rem;font-weight:600;color:#fff;letter-spacing:0.02em}
+.q-op{margin-left:auto;font-family:var(--mono);font-size:0.58rem;color:var(--warn);border:1px solid rgba(243,156,18,0.4);padding:2px 8px;letter-spacing:0.1em}
+.q-body{padding:1.1rem 1.2rem}
+.q-body p{margin-bottom:1rem}
+pre{background:var(--bg);border:1px solid var(--border2);padding:1rem 1.15rem;overflow-x:auto;font-family:var(--mono);font-size:0.8rem;line-height:1.7;color:var(--text);margin-top:0.4rem}
+pre .kw{color:var(--red3)} pre .str{color:var(--green)} pre .com{color:var(--muted)}
+footer{max-width:860px;margin:3.5rem auto 0;padding-top:2rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:0.66rem;color:var(--muted);letter-spacing:0.08em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a href="../index.html" class="brand">Devonte<span>.</span></a>
+    <a href="../index.html" class="back-btn">← Back to Portfolio</a>
+  </div>
+
+  <div class="eyebrow">Case File 03 · Work Sample</div>
+  <h1>SQL Filters &amp; Joins — Security Investigation Queries</h1>
+  <div class="redline"></div>
+  <div class="tags">
+    <span class="tag">SQL</span><span class="tag">MariaDB</span><span class="tag">Linux</span><span class="tag">Log Querying</span><span class="tag">AND / OR / NOT / LIKE</span>
+  </div>
+
+  <div class="callout">
+    <strong style="color:var(--text)">Scenario.</strong> A work sample from the Google Cybersecurity Professional Certificate. The security team needs data to investigate potential issues and to push a system update. The task: pull specific records about employees, their machines, and their departments from a MariaDB database — translating each investigation need into precise filter logic.
+  </div>
+
+  <h2><span class="n">01</span>After-hours failed login attempts</h2>
+  <div class="q">
+    <div class="q-head"><span class="q-num">QUERY 01</span><span class="q-title">Failed logins after 18:00</span><span class="q-op">AND</span></div>
+    <div class="q-body">
+      <p>Both conditions had to be true at the same time — the attempt happened after hours <em>and</em> it failed — so <code>AND</code> was the right operator. It returns only the rows matching every specified condition, isolating exactly the suspicious activity.</p>
+      <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> log_in_attempts
+<span class="kw">WHERE</span> login_time &gt; <span class="str">'18:00:00'</span> <span class="kw">AND</span> success = <span class="str">0</span>;</pre>
+    </div>
+  </div>
+
+  <h2><span class="n">02</span>Login attempts on specific dates</h2>
+  <div class="q">
+    <div class="q-head"><span class="q-num">QUERY 02</span><span class="q-title">Activity on two investigation dates</span><span class="q-op">OR</span></div>
+    <div class="q-body">
+      <p>The suspicious event could have occurred on either of two dates under investigation, so <code>OR</code> was necessary — it returns rows matching either condition rather than requiring both.</p>
+      <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> log_in_attempts
+<span class="kw">WHERE</span> login_date = <span class="str">'2022-05-08'</span> <span class="kw">OR</span> login_date = <span class="str">'2022-05-09'</span>;</pre>
+    </div>
+  </div>
+
+  <h2><span class="n">03</span>Login attempts outside of Mexico</h2>
+  <div class="q">
+    <div class="q-head"><span class="q-num">QUERY 03</span><span class="q-title">Exclude one country by pattern</span><span class="q-op">NOT + LIKE</span></div>
+    <div class="q-body">
+      <p>The pattern <code>'MEX%'</code> catches both <code>'MEX'</code> and <code>'MEXICO'</code> as they appear in the dataset, and <code>NOT</code> reverses the match to return every other country.</p>
+      <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> log_in_attempts
+<span class="kw">WHERE</span> <span class="kw">NOT</span> country <span class="kw">LIKE</span> <span class="str">'MEX%'</span>;</pre>
+    </div>
+  </div>
+
+  <h2><span class="n">04</span>Employees in Marketing (East building)</h2>
+  <div class="q">
+    <div class="q-head"><span class="q-num">QUERY 04</span><span class="q-title">Department + location subset</span><span class="q-op">AND + LIKE</span></div>
+    <div class="q-body">
+      <p>Combining both conditions targeted only the specific subset of employees whose machines needed the update — Marketing staff located in the East building.</p>
+      <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> employees
+<span class="kw">WHERE</span> department = <span class="str">'Marketing'</span> <span class="kw">AND</span> office <span class="kw">LIKE</span> <span class="str">'East%'</span>;</pre>
+    </div>
+  </div>
+
+  <h2><span class="n">05</span>Employees in Finance or Sales</h2>
+  <div class="q">
+    <div class="q-head"><span class="q-num">QUERY 05</span><span class="q-title">Two departments, one update</span><span class="q-op">OR</span></div>
+    <div class="q-body">
+      <p>Finance and Sales needed a different security update from the rest of the company, so <code>OR</code> pulled both groups in a single query instead of running two separate commands.</p>
+      <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> employees
+<span class="kw">WHERE</span> department = <span class="str">'Finance'</span> <span class="kw">OR</span> department = <span class="str">'Sales'</span>;</pre>
+    </div>
+  </div>
+
+  <h2><span class="n">06</span>All employees not in IT</h2>
+  <div class="q">
+    <div class="q-head"><span class="q-num">QUERY 06</span><span class="q-title">Everyone outside one department</span><span class="q-op">NOT</span></div>
+    <div class="q-body">
+      <p>The update only affected non-IT staff, so <code>NOT department = 'Information Technology'</code> returned the full list of employees who still needed it applied.</p>
+      <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> employees
+<span class="kw">WHERE</span> <span class="kw">NOT</span> department = <span class="str">'Information Technology'</span>;</pre>
+    </div>
+  </div>
+
+  <h2>Summary</h2>
+  <p>This project used SQL filters in MariaDB to retrieve targeted data from login and employee records in support of a security investigation and a system-update effort. I applied <code>AND</code>, <code>OR</code>, and <code>NOT</code> — along with <code>LIKE</code> for pattern matching — to isolate specific records across six scenarios. Each query meant translating an investigation need into precise filter logic, which reinforced how operator choice directly shapes what data comes back.</p>
+  <p>The bigger takeaway: SQL is a practical, everyday tool for security analysts, not just database administrators. Querying for failed logins, suspicious date ranges, geographic anomalies, and department-specific records maps directly onto real SOC and incident-response work.</p>
+</div>
+
+<footer>© 2026 Devonte Huckleberry — Chicago, IL.</footer>
+</body>
+</html>
