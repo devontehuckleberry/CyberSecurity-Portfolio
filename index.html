@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Content Security Policy -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://www.google.com https://www.gstatic.com https://formspree.io; script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; frame-src https://www.google.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://www.google.com https://www.gstatic.com https://formspree.io; script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://images.credly.com; frame-src https://www.google.com;">
 
 <!-- reCAPTCHA v3 -->
 <script src="https://www.google.com/recaptcha/api.js?render=6LdlR_wsAAAAADqfJnLX3d0E65kv42C42Yg7rs9g"></script>
@@ -249,6 +249,11 @@ h2.stitle span{color:var(--red)}
 .progress .cstext{color:var(--warn)}
 .credly-btn{display:block;font-family:var(--mono);font-size:0.58rem;color:var(--muted2);text-decoration:none;border:1px solid var(--border);padding:4px 0;text-align:center;letter-spacing:0.1em;text-transform:uppercase;margin-top:0.85rem;transition:all 0.2s}
 .credly-btn:hover{color:var(--red3);border-color:rgba(230,57,70,0.4)}
+.cert-badge-link{display:inline-block;margin-bottom:1rem;transition:transform 0.25s;line-height:0}
+.cert-badge-link:hover{transform:translateY(-3px)}
+.cert-badge-img{width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.45))}
+.credly-all{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--mono);font-size:0.68rem;color:var(--muted2);text-decoration:none;border:1px solid var(--border2);padding:0.7rem 1.5rem;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s}
+.credly-all:hover{border-color:var(--red);color:var(--red3)}
 
 /* ── SKILLS ── */
 #skills{background:var(--bg2)}
@@ -276,6 +281,11 @@ h2.stitle span{color:var(--red)}
 .cl-type{font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;display:block}
 .cl-val{font-size:0.82rem;color:var(--muted2);display:block;transition:color 0.2s}
 .contact-link:hover .cl-val{color:var(--red3)}
+.form-email{display:flex;flex-direction:column;gap:0.2rem;text-decoration:none;background:var(--bg2);border:1px solid var(--border);border-left:2px solid var(--red);padding:0.85rem 1.15rem;margin-bottom:1rem;transition:border-color 0.2s,background 0.2s}
+.form-email:hover{border-color:var(--red2);border-left-color:var(--red);background:var(--bg3)}
+.fe-label{font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase}
+.fe-addr{font-family:var(--mono);font-size:0.92rem;color:var(--text);letter-spacing:0.01em}
+.form-email:hover .fe-addr{color:var(--red3)}
 
 /* FORM */
 .contact-form-wrap{background:var(--bg2);border:1px solid var(--border);padding:2.25rem;position:relative}
@@ -731,7 +741,7 @@ a.pp-card:hover::before{transform:scaleX(1)}
         <div class="proj-tools">
           <span class="ptool">Kali Linux</span><span class="ptool">Nmap</span><span class="ptool">Metasploit</span><span class="ptool">CVE-2011-2523</span>
         </div>
-        <div class="proj-desc">Full penetration test on an isolated lab network: ping sweep → 22-service enumeration → vsftpd backdoor identification → reverse shell session → root access confirmed. Actual exploit time ~15 minutes; full session ~4 hours of deliberate, documented methodology.</div>
+        <div class="proj-desc">Gained full root access in ~15 minutes by exploiting the vsftpd 2.3.4 backdoor (CVE-2011-2523) — confirmed an interactive reverse shell on an isolated lab target. Then documented the complete enumeration-to-exploitation path across a deliberate 4-hour session: ping sweep → service enumeration → backdoor identification → shell → root.</div>
         <div class="proj-footer">
           <span class="proj-outcome-label">Pen Testing &amp; Exploitation</span>
           <a href="projects/metasploitable-lab.html" class="proj-link">Lab Write-Up ↗</a>
@@ -745,7 +755,7 @@ a.pp-card:hover::before{transform:scaleX(1)}
         <div class="proj-tools">
           <span class="ptool">SQL</span><span class="ptool">MariaDB</span><span class="ptool">Linux</span><span class="ptool">Log Querying</span>
         </div>
-        <div class="proj-desc">Six targeted queries against login attempt logs and employee records using AND, OR, NOT, and LIKE operators — pulling after-hours failed logins, flagging specific investigation dates, excluding geographic regions, and isolating department-specific subsets for patch deployment.</div>
+        <div class="proj-desc">Surfaced after-hours failed logins, flagged activity on specific investigation dates, and isolated attempts originating outside an expected region — then narrowed employee records to department-specific machine subsets for a targeted patch rollout. Six precise AND/OR/NOT/LIKE queries against login and employee data in MariaDB.</div>
         <div class="proj-footer">
           <span class="proj-outcome-label">Data Querying for Security</span>
           <a href="projects/sql-investigation.html" class="proj-link">Work Sample ↗</a>
@@ -802,18 +812,18 @@ a.pp-card:hover::before{transform:scaleX(1)}
     </div>
     <div class="certs-grid">
       <div class="cert-card earned reveal">
-        <div class="cert-logo">Google</div>
+        <a href="https://www.credly.com/badges/6936586a-7144-44e3-a90c-755d4e1e8af1/public_url" target="_blank" rel="noopener" class="cert-badge-link" aria-label="Verify Google Cybersecurity Professional Certificate on Credly">
+          <img class="cert-badge-img" src="https://images.credly.com/images/0bf0f2da-a699-4c82-82e2-56dcf1f2e1c7/image.png" alt="Google Cybersecurity Professional Certificate — verified Credly badge" width="96" height="96" loading="lazy">
+        </a>
         <div class="cert-name">Cybersecurity Professional Certificate</div>
         <div class="cert-issuer">Google / Coursera</div>
-        <div class="cert-status"><div class="csdot"></div><span class="cstext">Earned</span></div>
-        <a href="https://www.credly.com/users/devonte-huckleberry" target="_blank" rel="noopener" class="credly-btn">View on Credly ↗</a>
+        <div class="cert-status"><div class="csdot"></div><span class="cstext">Earned · Verified</span></div>
       </div>
       <div class="cert-card earned reveal">
         <div class="cert-logo">ISC²</div>
         <div class="cert-name">Certified in Cybersecurity (CC)</div>
         <div class="cert-issuer">ISC²</div>
         <div class="cert-status"><div class="csdot"></div><span class="cstext">Earned</span></div>
-        <a href="https://www.credly.com/users/devonte-huckleberry" target="_blank" rel="noopener" class="credly-btn">View on Credly ↗</a>
       </div>
       <div class="cert-card progress reveal">
         <div class="cert-logo">CompTIA</div>
@@ -827,6 +837,9 @@ a.pp-card:hover::before{transform:scaleX(1)}
         <div class="cert-issuer">Splunk — Per Scholas Chicago</div>
         <div class="cert-status"><div class="csdot"></div><span class="cstext">In Progress</span></div>
       </div>
+    </div>
+    <div class="center reveal" style="margin-top:2.5rem">
+      <a href="https://www.credly.com/users/devonte-huckleberry" target="_blank" rel="noopener" class="credly-all">🔗 View all verified credentials on Credly →</a>
     </div>
   </div>
 </section>
@@ -877,9 +890,9 @@ a.pp-card:hover::before{transform:scaleX(1)}
       <div class="reveal-l">
         <h3>Let's Connect</h3>
         <p>I'm actively looking for SOC analyst roles and entry-level security positions in the Chicago area. If you're hiring, recruiting, or want to connect professionally — reach out. Open to conversations about IAM, GRC, AI compliance, or Per Scholas too.</p>
-        <a href="mailto:DevonteHuckleberrry@gmail.com" class="contact-link">
+        <a href="mailto:DevonteHuckleberry@gmail.com" class="contact-link">
           <div class="cl-icon">✉</div>
-          <div><span class="cl-type">Email</span><span class="cl-val">DevonteHuckleberrry@gmail.com</span></div>
+          <div><span class="cl-type">Email</span><span class="cl-val">DevonteHuckleberry@gmail.com</span></div>
         </a>
         <a href="https://www.linkedin.com/in/devonte-huckleberry-10197a215/" target="_blank" rel="noopener" class="contact-link">
           <div class="cl-icon">in</div>
@@ -895,6 +908,10 @@ a.pp-card:hover::before{transform:scaleX(1)}
         </a>
       </div>
       <div class="reveal-r">
+        <a href="mailto:DevonteHuckleberry@gmail.com" class="form-email">
+          <span class="fe-label">Prefer email? Reach me directly at</span>
+          <span class="fe-addr">✉ DevonteHuckleberry@gmail.com</span>
+        </a>
         <div class="contact-form-wrap">
           <div class="fs-success-msg" id="fs-success">✓ Message received — I'll get back to you soon.</div>
           <div class="fs-error-msg" id="fs-error"></div>
@@ -1199,7 +1216,7 @@ Silicon — where several of these projects came from.`;},
     if(parts[0]==='contact'){
       print(`Contact
 ────────────────────────────────────────────
-  Email     <a href="mailto:DevonteHuckleberrry@gmail.com">DevonteHuckleberrry@gmail.com</a>
+  Email     <a href="mailto:DevonteHuckleberry@gmail.com">DevonteHuckleberry@gmail.com</a>
   LinkedIn  <a href="https://www.linkedin.com/in/devonte-huckleberry-10197a215/" target="_blank" rel="noopener">in/devonte-huckleberry ↗</a>
   Credly    <a href="https://www.credly.com/users/devonte-huckleberry" target="_blank" rel="noopener">credly.com/users/devonte-huckleberry ↗</a>
   Status    <span class="t-green">open to SOC analyst & entry-level security roles — Chicago</span>`);
@@ -1319,7 +1336,7 @@ document.getElementById('contact-form').addEventListener('submit',async function
       btn.disabled=false; btn.textContent='Send Message';
     }
   } catch(err){
-    errorEl.textContent='Network error. Try emailing directly at DevonteHuckleberrry@gmail.com';
+    errorEl.textContent='Network error. Try emailing directly at DevonteHuckleberry@gmail.com';
     errorEl.style.display='block';
     btn.disabled=false; btn.textContent='Send Message';
   }
