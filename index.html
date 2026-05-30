@@ -110,9 +110,9 @@ nav.scrolled{box-shadow:0 4px 40px rgba(230,57,70,0.1)}
 section{padding:6rem 0}
 .eyebrow{font-family:var(--mono);font-size:0.62rem;color:var(--red);letter-spacing:0.28em;text-transform:uppercase;margin-bottom:0.85rem;display:flex;align-items:center;gap:0.75rem}
 .eyebrow::before{content:'//';opacity:0.6}
-h2.stitle{font-family:var(--display);font-size:clamp(2rem,3.5vw,2.8rem);font-weight:700;color:#fff;line-height:1.1;letter-spacing:0.02em;margin-bottom:0.6rem}
+h2.stitle{font-family:var(--display);font-size:clamp(2rem,3.5vw,2.8rem);font-weight:700;color:#fff;line-height:1.1;letter-spacing:0.02em;margin-bottom:0.6rem;text-wrap:balance}
 h2.stitle span{color:var(--red)}
-.sub{font-size:0.9rem;color:var(--muted2);max-width:540px;line-height:1.85;margin-bottom:2.5rem}
+.sub{font-size:0.9rem;color:var(--muted2);max-width:540px;line-height:1.85;margin-bottom:2.5rem;text-wrap:pretty}
 .center{text-align:center}
 .center .sub{margin-left:auto;margin-right:auto}
 .redline{width:56px;height:2px;background:linear-gradient(90deg,var(--red),transparent);margin-bottom:2rem}
@@ -132,10 +132,10 @@ h2.stitle span{color:var(--red)}
 .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;position:relative;z-index:1}
 .hero-text .hello{font-family:var(--mono);font-size:0.72rem;color:var(--red);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem}
 .hero-text .hello::before{content:'';width:32px;height:1px;background:var(--red)}
-.hero-text h1{font-family:var(--display);font-size:clamp(3rem,5.5vw,5rem);font-weight:700;color:#fff;line-height:1.0;letter-spacing:0.02em;margin-bottom:0.5rem}
+.hero-text h1{font-family:var(--display);font-size:clamp(3rem,5.5vw,5rem);font-weight:700;color:#fff;line-height:1.0;letter-spacing:0.02em;margin-bottom:0.5rem;text-wrap:balance}
 .hero-text h1 span{color:var(--red)}
 .hero-role{font-family:var(--display);font-size:1.3rem;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase;font-weight:500;margin-bottom:1.75rem}
-.hero-desc{font-size:0.95rem;color:var(--muted2);line-height:1.9;max-width:500px;margin-bottom:2.5rem}
+.hero-desc{font-size:0.95rem;color:var(--muted2);line-height:1.9;max-width:500px;margin-bottom:2.5rem;text-wrap:pretty}
 .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;margin-bottom:3rem}
 .hero-stats{display:flex;gap:2.5rem}
 .hstat-num{font-family:var(--display);font-size:2rem;font-weight:700;color:var(--red);line-height:1}
@@ -180,8 +180,8 @@ h2.stitle span{color:var(--red)}
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent);transform:scaleX(0);transform-origin:left;transition:transform 0.3s}
 .svc-card:hover::before{transform:scaleX(1)}
 .svc-icon{width:48px;height:48px;background:var(--red-dim);border:1px solid rgba(230,57,70,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;font-size:1.3rem}
-.svc-title{font-family:var(--display);font-size:1.05rem;font-weight:600;color:#fff;margin-bottom:0.6rem;letter-spacing:0.03em}
-.svc-desc{font-size:0.83rem;color:var(--muted2);line-height:1.75}
+.svc-title{font-family:var(--display);font-size:1.05rem;font-weight:600;color:#fff;margin-bottom:0.6rem;letter-spacing:0.03em;text-wrap:balance}
+.svc-desc{font-size:0.83rem;color:var(--muted2);line-height:1.75;text-wrap:pretty}
 
 /* ── STATS STRIP ── */
 #stats{padding:0;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
@@ -211,8 +211,8 @@ h2.stitle span{color:var(--red)}
 .why-points{display:flex;flex-direction:column;gap:1.5rem;margin-bottom:2rem}
 .why-point{display:flex;gap:1.25rem;align-items:flex-start}
 .wp-icon{width:44px;height:44px;background:var(--red-dim);border:1px solid rgba(230,57,70,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;margin-top:2px}
-.wp-title{font-family:var(--display);font-size:1rem;font-weight:600;color:#fff;margin-bottom:0.35rem;letter-spacing:0.03em}
-.wp-desc{font-size:0.83rem;color:var(--muted2);line-height:1.72}
+.wp-title{font-family:var(--display);font-size:1rem;font-weight:600;color:#fff;margin-bottom:0.35rem;letter-spacing:0.03em;text-wrap:balance}
+.wp-desc{font-size:0.83rem;color:var(--muted2);line-height:1.72;text-wrap:pretty}
 
 /* ── PROJECTS ── */
 #projects{background:var(--bg2);position:relative}
@@ -222,10 +222,10 @@ h2.stitle span{color:var(--red)}
 .proj-card:hover{border-color:var(--red2);transform:translateY(-4px)}
 .proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--red2),transparent)}
 .proj-number{font-family:var(--mono);font-size:0.6rem;color:var(--red);letter-spacing:0.15em;margin-bottom:0.75rem;text-transform:uppercase}
-.proj-title{font-family:var(--display);font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:0.75rem;line-height:1.3;letter-spacing:0.02em}
+.proj-title{font-family:var(--display);font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:0.75rem;line-height:1.3;letter-spacing:0.02em;text-wrap:balance}
 .proj-tools{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:1rem}
 .ptool{font-family:var(--mono);font-size:0.55rem;color:var(--red3);background:rgba(230,57,70,0.07);border:1px solid rgba(230,57,70,0.2);padding:2px 8px;letter-spacing:0.1em;text-transform:uppercase}
-.proj-desc{font-size:0.82rem;color:var(--muted2);line-height:1.78;flex:1;margin-bottom:1.25rem}
+.proj-desc{font-size:0.82rem;color:var(--muted2);line-height:1.78;flex:1;margin-bottom:1.25rem;text-wrap:pretty}
 .proj-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:1rem;margin-top:auto}
 .proj-outcome-label{font-family:var(--mono);font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase}
 .proj-link{font-family:var(--mono);font-size:0.62rem;color:var(--red3);text-decoration:none;border:1px solid rgba(230,57,70,0.25);padding:3px 10px;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s}
@@ -297,6 +297,9 @@ h2.stitle span{color:var(--red)}
 .form-input:focus{border-color:var(--red)}
 .form-input::placeholder{color:var(--muted)}
 textarea.form-input{min-height:110px;resize:vertical}
+@supports(field-sizing:content){textarea.form-input{field-sizing:content;min-block-size:6lh;max-block-size:40dvh;resize:none}}
+.form-input:user-invalid{border-color:var(--red);box-shadow:0 0 0 2px var(--red-dim)}
+.form-input:user-valid{border-color:var(--green)}
 .fs-success-msg{display:none;font-family:var(--mono);font-size:0.78rem;color:var(--green);padding:0.9rem 1rem;border:1px solid rgba(46,204,113,0.3);background:rgba(46,204,113,0.05);margin-bottom:1rem;letter-spacing:0.03em}
 .fs-error-msg{display:none;font-family:var(--mono);font-size:0.72rem;color:var(--red3);padding:0.75rem 1rem;border:1px solid rgba(230,57,70,0.3);background:rgba(230,57,70,0.05);margin-bottom:1rem}
 .field-error{font-family:var(--mono);font-size:0.6rem;color:var(--red3);display:block;margin-top:3px}
@@ -326,6 +329,42 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2.5rem 5
 .reveal-l.visible{opacity:1;transform:none}
 .reveal-r{opacity:0;transform:translateX(24px);transition:opacity 0.65s ease,transform 0.65s ease}
 .reveal-r.visible{opacity:1;transform:none}
+
+/* ── PROJECT TYPE BADGES ── */
+.proj-type-badge{display:inline-flex;align-items:center;gap:0.35rem;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;padding:3px 8px;margin-bottom:0.6rem;transition:opacity 0.3s,scale 0.3s}
+@supports(selector(@starting-style)){.proj-type-badge{@starting-style{opacity:0;scale:0.85}}}
+.badge-live{background:oklch(30% 0.14 25);color:oklch(88% 0.10 25);border:1px solid oklch(45% 0.18 25)}
+.badge-lab{background:oklch(18% 0.06 25);color:oklch(65% 0.08 25);border:1px solid oklch(28% 0.08 25)}
+.badge-course{background:oklch(14% 0.03 25);color:oklch(50% 0.05 25);border:1px solid oklch(22% 0.04 25)}
+.badge-ir{background:oklch(14% 0.03 25);color:oklch(50% 0.05 25);border:1px solid oklch(22% 0.04 25)}
+
+/* ── LIVE CARD SPECIAL TREATMENT ── */
+.proj-card.proj-live{border-color:rgba(230,57,70,0.45)}
+.proj-card.proj-live::before{transform:scaleX(1);background:linear-gradient(90deg,var(--red),transparent)}
+.proj-live-indicator{display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.58rem;color:var(--green);letter-spacing:0.2em;text-transform:uppercase}
+.proj-live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite;flex-shrink:0}
+
+/* ── STAT SUBLINE ── */
+.stat-sub{display:block;font-family:var(--mono);font-size:0.55rem;color:var(--red3);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px}
+
+/* ── SCROLL-DRIVEN REVEAL (progressive enhancement) ── */
+@supports(animation-timeline:view()){
+  @media(prefers-reduced-motion:no-preference){
+    .reveal{animation:reveal-fade linear both;animation-timeline:view();animation-range:entry 0% cover 25%;opacity:1;transform:none;transition:none}
+    .reveal-l{animation:reveal-fade-l linear both;animation-timeline:view();animation-range:entry 0% cover 25%;opacity:1;transform:none;transition:none}
+    .reveal-r{animation:reveal-fade-r linear both;animation-timeline:view();animation-range:entry 0% cover 25%;opacity:1;transform:none;transition:none}
+    @keyframes reveal-fade{from{opacity:0;translate:0 20px}to{opacity:1;translate:0 0}}
+    @keyframes reveal-fade-l{from{opacity:0;translate:-24px 0}to{opacity:1;translate:0 0}}
+    @keyframes reveal-fade-r{from{opacity:0;translate:24px 0}to{opacity:1;translate:0 0}}
+  }
+}
+
+/* ── PREFERS-REDUCED-MOTION (expanded) ── */
+@media(prefers-reduced-motion:reduce){
+  .pl-ring{animation:none}
+  .sdot{animation:none;opacity:1}
+  .reveal,.reveal-l,.reveal-r{opacity:1;transform:none;transition:none}
+}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
@@ -494,8 +533,8 @@ a.pp-card:hover::before{transform:scaleX(1)}
           </div>
           <div class="hero-divider"></div>
           <div>
-            <div class="hstat-num" data-target="5">0</div>
-            <div class="hstat-label">Projects</div>
+            <div class="hstat-num" data-target="1">0</div>
+            <div class="hstat-label">Live Incident</div>
           </div>
           <div class="hero-divider"></div>
           <div>
@@ -581,6 +620,8 @@ a.pp-card:hover::before{transform:scaleX(1)}
             <div style="margin-top:1.25rem;font-size:0.6rem;color:var(--muted);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.5rem"># frameworks tracking</div>
             <div><span style="color:var(--muted)">·</span> &nbsp;NIST AI RMF</div>
             <div><span style="color:var(--muted)">·</span> &nbsp;EU AI Act &nbsp;|&nbsp; ISO 42001</div>
+            <div style="margin-top:1.25rem;font-size:0.6rem;color:var(--muted);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.5rem"># platforms</div>
+            <div><span style="color:var(--muted)">·</span> &nbsp;<a href="https://tryhackme.com/p/Devonte" target="_blank" rel="noopener" style="color:var(--muted2);text-decoration:none;border-bottom:1px dotted var(--border2)">TryHackMe</a></div>
           </div>
         </div>
       </div>
@@ -641,7 +682,7 @@ a.pp-card:hover::before{transform:scaleX(1)}
     </div>
     <div class="stat-box reveal">
       <div class="stat-n" data-target="5">0</div>
-      <div class="stat-l">Portfolio Projects</div>
+      <div class="stat-l">Case Files<span class="stat-sub">incl. 1 live incident</span></div>
     </div>
     <div class="stat-box reveal">
       <div class="stat-n"><span data-target="10">0</span><span class="suf">+</span></div>
@@ -718,8 +759,9 @@ a.pp-card:hover::before{transform:scaleX(1)}
     <div class="projects-grid">
 
       <!-- 01 -->
-      <div class="proj-card reveal">
-        <div class="proj-number">// Case File 01</div>
+      <div class="proj-card proj-live reveal">
+        <div class="proj-number" style="display:flex;align-items:center;justify-content:space-between">// Case File 01 <span class="proj-live-indicator"><span class="proj-live-dot"></span>Live</span></div>
+        <span class="proj-type-badge badge-live">Live Incident</span>
         <div class="proj-title">Domain Hijack Investigation — ssumcchicago.org</div>
         <div class="proj-tools">
           <span class="ptool">Wireshark</span><span class="ptool">tshark</span><span class="ptool">VirusTotal</span><span class="ptool">DNS Analysis</span><span class="ptool">QUIC/TLS</span>
@@ -737,6 +779,7 @@ a.pp-card:hover::before{transform:scaleX(1)}
       <!-- 02 -->
       <div class="proj-card reveal">
         <div class="proj-number">// Case File 02</div>
+        <span class="proj-type-badge badge-lab">Home Lab</span>
         <div class="proj-title">Metasploitable 2 — vsftpd 2.3.4 Backdoor Exploit</div>
         <div class="proj-tools">
           <span class="ptool">Kali Linux</span><span class="ptool">Nmap</span><span class="ptool">Metasploit</span><span class="ptool">CVE-2011-2523</span>
@@ -751,6 +794,7 @@ a.pp-card:hover::before{transform:scaleX(1)}
       <!-- 03 -->
       <div class="proj-card reveal">
         <div class="proj-number">// Case File 03</div>
+        <span class="proj-type-badge badge-course">Course Work</span>
         <div class="proj-title">SQL Filters &amp; Joins — Security Investigation Queries</div>
         <div class="proj-tools">
           <span class="ptool">SQL</span><span class="ptool">MariaDB</span><span class="ptool">Linux</span><span class="ptool">Log Querying</span>
@@ -765,6 +809,7 @@ a.pp-card:hover::before{transform:scaleX(1)}
       <!-- 04 -->
       <div class="proj-card reveal">
         <div class="proj-number">// Case File 04</div>
+        <span class="proj-type-badge badge-course">Course Work</span>
         <div class="proj-title">Vulnerability Assessment — Exposed Database Server</div>
         <div class="proj-tools">
           <span class="ptool">NIST SP 800-30</span><span class="ptool">Risk Scoring</span><span class="ptool">RBAC</span><span class="ptool">Audit Logging</span>
@@ -779,6 +824,7 @@ a.pp-card:hover::before{transform:scaleX(1)}
       <!-- 05 -->
       <div class="proj-card reveal">
         <div class="proj-number">// Case File 05</div>
+        <span class="proj-type-badge badge-ir">IR Documentation</span>
         <div class="proj-title">Incident Handler's Journal</div>
         <div class="proj-tools">
           <span class="ptool">Incident Response</span><span class="ptool">NIST Framework</span><span class="ptool">Documentation</span>
@@ -790,12 +836,32 @@ a.pp-card:hover::before{transform:scaleX(1)}
         </div>
       </div>
 
-      <!-- CTA card -->
-      <div class="proj-card reveal" style="background:var(--red-dim);border-color:rgba(230,57,70,0.25);justify-content:center;align-items:center;text-align:center;padding:3rem 2rem">
-        <div style="font-size:2.5rem;margin-bottom:1rem">📂</div>
-        <div style="font-family:var(--display);font-size:1.2rem;font-weight:600;color:#fff;margin-bottom:0.75rem;letter-spacing:0.03em">More Coming Soon</div>
-        <div style="font-size:0.83rem;color:var(--muted2);line-height:1.75;margin-bottom:1.5rem">This portfolio updates as I grow. More projects in progress through Per Scholas.</div>
-        <a href="https://www.linkedin.com/in/devonte-huckleberry-10197a215/" target="_blank" rel="noopener" class="btn-outline" style="font-size:0.75rem">Follow on LinkedIn</a>
+      <!-- 06 — next up -->
+      <div class="proj-card reveal" style="border-color:rgba(230,57,70,0.2);opacity:0.85">
+        <div class="proj-number">// Case File 06</div>
+        <span class="proj-type-badge badge-lab" style="opacity:0.7">Next Up</span>
+        <div class="proj-title" style="color:var(--muted2)">Phishing Email Analysis</div>
+        <div class="proj-tools">
+          <span class="ptool">PhishTank</span><span class="ptool">Email Headers</span><span class="ptool">VirusTotal</span><span class="ptool">IOC Extraction</span>
+        </div>
+        <div class="proj-desc">Analyzing real phishing samples: header inspection, link and attachment IOC extraction, and a documented triage workflow mirroring SOC Tier 1 volume work.</div>
+        <div class="proj-footer">
+          <span class="proj-outcome-label" style="opacity:0.6">In Progress</span>
+        </div>
+      </div>
+
+      <!-- 07 — planned -->
+      <div class="proj-card reveal" style="border-color:rgba(230,57,70,0.12);opacity:0.65">
+        <div class="proj-number">// Case File 07</div>
+        <span class="proj-type-badge badge-lab" style="opacity:0.5">Planned</span>
+        <div class="proj-title" style="color:var(--muted2)">Home SOC — Blue Team Detection Lab</div>
+        <div class="proj-tools">
+          <span class="ptool">Wazuh</span><span class="ptool">Linux</span><span class="ptool">Kali</span><span class="ptool">Alert Triage</span>
+        </div>
+        <div class="proj-desc">Open-source SIEM on the home lab network. Running attack scenarios from Kali, watching what fires, and writing detection notes for what doesn't.</div>
+        <div class="proj-footer">
+          <span class="proj-outcome-label" style="opacity:0.4">Coming Soon</span>
+        </div>
       </div>
 
     </div>
@@ -902,6 +968,10 @@ a.pp-card:hover::before{transform:scaleX(1)}
           <div class="cl-icon">🏅</div>
           <div><span class="cl-type">Credly</span><span class="cl-val">View Verified Badges</span></div>
         </a>
+        <a href="https://tryhackme.com/p/Devonte" target="_blank" rel="noopener" class="contact-link">
+          <div class="cl-icon" style="font-size:0.7rem;font-family:var(--mono)">THM</div>
+          <div><span class="cl-type">TryHackMe</span><span class="cl-val">tryhackme.com/p/Devonte</span></div>
+        </a>
         <a href="Devonte_Huckleberry_Resume.pdf" download class="contact-link">
           <div class="cl-icon">↓</div>
           <div><span class="cl-type">Resume</span><span class="cl-val">Download PDF</span></div>
@@ -976,16 +1046,18 @@ a.pp-card:hover::before{transform:scaleX(1)}
 
       <div class="pp-card pp-soon reveal" aria-disabled="true">
         <div class="pp-num">// Lab 03</div>
-        <div class="pp-title">Future Laboratory / Deployment Analysis</div>
-        <div class="pp-desc">New lab work and deployment analysis in progress through Per Scholas: IAM, log analysis, and detection engineering.</div>
-        <span class="pp-soon-badge">Coming Soon</span>
+        <div class="pp-title">Phishing Email Analysis</div>
+        <div class="pp-desc">Real phishing sample triage: header inspection, IOC extraction, VirusTotal correlation. Documenting the workflow a SOC analyst runs on every phishing ticket.</div>
+        <div class="pp-tags"><span class="pp-tag">PhishTank</span><span class="pp-tag">Email Headers</span><span class="pp-tag">VirusTotal</span></div>
+        <span class="pp-soon-badge">In Progress</span>
       </div>
 
       <div class="pp-card pp-soon reveal" aria-disabled="true">
         <div class="pp-num">// Lab 04</div>
-        <div class="pp-title">Future Laboratory / Deployment Analysis</div>
-        <div class="pp-desc">Reserved for upcoming case files. This portfolio updates as the work grows.</div>
-        <span class="pp-soon-badge">Coming Soon</span>
+        <div class="pp-title">Home SOC — Blue Team Detection Lab</div>
+        <div class="pp-desc">Wazuh SIEM on the home lab network. Running Kali attack scenarios, watching what fires, writing detection notes for the gaps. Blue team work on existing red team infrastructure.</div>
+        <div class="pp-tags"><span class="pp-tag">Wazuh</span><span class="pp-tag">Kali</span><span class="pp-tag">Alert Triage</span></div>
+        <span class="pp-soon-badge">Planned</span>
       </div>
 
     </div>
@@ -1257,6 +1329,7 @@ window.addEventListener('scroll',()=>{
 function runCounter(el){
   const t=+el.dataset.target;
   if(!t)return;
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){el.textContent=t;return;}
   let c=0;const d=1300;const s=Math.ceil(d/t);
   const iv=setInterval(()=>{c++;el.textContent=c;if(c>=t)clearInterval(iv);},s);
 }
