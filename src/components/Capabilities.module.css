@@ -1,0 +1,86 @@
+.section {
+  padding-block: 4rem 5rem;
+}
+
+.eyebrow {
+  font-size: .68rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: .8rem;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: var(--red);
+  flex-shrink: 0;
+}
+
+.h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: .8rem;
+  line-height: 1.25;
+}
+
+.h2 b {
+  color: var(--red);
+}
+
+.ssub {
+  font-size: .92rem;
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 2.5rem;
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+.card {
+  padding: 1.6rem;
+}
+
+.n {
+  color: var(--red);
+  font-size: .7rem;
+  letter-spacing: .16em;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.card h3 {
+  font-size: .96rem;
+  font-weight: 600;
+  margin-bottom: .7rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.card p {
+  font-size: .88rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

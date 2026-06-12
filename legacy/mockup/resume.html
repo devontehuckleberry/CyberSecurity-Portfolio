@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume — Devonte Huckleberry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: oklch(16% 0.012 20);
+  --text: oklch(95% 0.004 30);
+  --muted: oklch(76% 0.01 30);
+  --faint: oklch(58% 0.012 30);
+  --red: oklch(62% 0.21 22);
+  --red-deep: oklch(44% 0.17 24);
+  --hairline: oklch(100% 0 0 / 11%);
+  --glass-fill: oklch(100% 0 0 / 5%);
+  --mono: "IBM Plex Mono", monospace;
+  --sans: "IBM Plex Sans", sans-serif;
+  --chamfer: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:
+    radial-gradient(ellipse 80% 50% at 70% -10%, oklch(30% 0.1 24 / 60%), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 10% 110%, oklch(24% 0.08 28 / 50%), transparent 70%),
+    var(--bg);
+  color:var(--text);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  padding-block:6.5rem 5rem;
+}
+.glass{
+  background:var(--glass-fill);border:1px solid var(--hairline);border-radius:16px;
+  box-shadow:inset 0 1px 0 oklch(100% 0 0 / 11%), 0 20px 50px oklch(0% 0 0 / 38%);
+  backdrop-filter:blur(20px);
+}
+.topbar{
+  position:fixed;top:1.1rem;left:50%;translate:-50% 0;z-index:50;
+  width:min(820px, 92vw);height:58px;border-radius:16px;
+  display:flex;align-items:center;justify-content:space-between;padding-inline:1.1rem;
+}
+.topbar .back{font-family:var(--mono);font-size:.74rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.topbar .back:hover{color:var(--red)}
+.btn{
+  font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.55rem;
+  padding:.7rem 1.3rem;clip-path:var(--chamfer);color:#fff;
+  background:linear-gradient(180deg, var(--red), var(--red-deep));
+  position:relative;isolation:isolate;border:0;cursor:pointer;
+}
+.btn::before{
+  content:"";position:absolute;inset:0;z-index:-1;background:oklch(from var(--red) calc(l + .12) c h);
+  transform:translateX(-101%);transition:transform .3s cubic-bezier(.65,.05,0,1);
+}
+.btn:hover::before{transform:translateX(0)}
+.btn::after{content:"↓"}
+.sheet{width:min(820px, 92vw);margin-inline:auto;padding:clamp(1.8rem, 5vw, 3.2rem)}
+header.r h1{font-family:var(--mono);font-size:clamp(1.7rem, 4vw, 2.4rem);font-weight:700;letter-spacing:-.02em}
+header.r .sub{font-family:var(--mono);font-size:.82rem;color:var(--red);letter-spacing:.14em;text-transform:uppercase;margin-top:.3rem}
+header.r .contact{display:flex;gap:.5rem 1.4rem;flex-wrap:wrap;margin-top:1rem;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+header.r .contact a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--hairline)}
+header.r .contact a:hover{color:var(--red);border-color:var(--red)}
+h2{
+  font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--red);margin:2.8rem 0 1.1rem;display:flex;align-items:center;gap:.9rem;
+}
+h2::after{content:"";flex:1;height:1px;background:var(--hairline)}
+p.summary{font-size:.95rem;line-height:1.85;color:var(--muted);text-wrap:pretty}
+.skills{display:grid;grid-template-columns:max-content 1fr;gap:.55rem 1.4rem;font-size:.86rem}
+.skills dt{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;color:var(--faint);text-transform:uppercase;padding-top:.15rem}
+.skills dd{color:var(--muted);line-height:1.6}
+.job{margin-bottom:1.9rem}
+.job .head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+.job h3{font-family:var(--mono);font-size:.98rem;font-weight:600}
+.job .when{font-family:var(--mono);font-size:.68rem;color:var(--faint);letter-spacing:.06em}
+.job .org{font-size:.8rem;color:var(--faint);margin:.2rem 0 .6rem}
+.job ul{list-style:none}
+.job li{font-size:.88rem;color:var(--muted);line-height:1.75;padding-left:1.15rem;position:relative;margin-bottom:.35rem}
+.job li::before{content:"▸";position:absolute;left:0;color:var(--red)}
+.certs{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.cert{border:1px solid var(--hairline);border-radius:12px;padding:.9rem 1.05rem;background:oklch(100% 0 0 / 3%)}
+.cert .n{font-family:var(--mono);font-size:.8rem;font-weight:600;line-height:1.4}
+.cert .s{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:.3rem}
+@media (width <= 640px){
+  .skills{grid-template-columns:1fr;gap:.1rem .8rem}
+  .skills dt{margin-top:.6rem}
+  .certs{grid-template-columns:1fr}
+}
+@media print{
+  body{background:#fff;color:#111;padding:0}
+  .topbar{display:none}
+  .sheet{box-shadow:none;border:0;background:none;width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar glass">
+  <a class="back" href="after2.html">← back to portfolio</a>
+  <a class="btn" href="../Devonte_Huckleberry_Resume.pdf" download>Download PDF</a>
+</div>
+
+<main class="sheet glass">
+  <header class="r">
+    <h1>Devonte Huckleberry</h1>
+    <div class="sub">SOC Analyst Candidate</div>
+    <div class="contact">
+      <span>Calumet City, IL</span>
+      <a href="tel:8723059189">872-305-9189</a>
+      <a href="mailto:DevonteHuckleberry@gmail.com">DevonteHuckleberry@gmail.com</a>
+      <a href="https://www.linkedin.com/in/devonte-huckleberry/" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </header>
+
+  <h2>Summary</h2>
+  <p class="summary">Cybersecurity student at Per Scholas Chicago with ten-plus years of self-taught IT experience and a background in physical security operations. Already comfortable with the tools a SOC runs on: Wireshark, Splunk, Linux, and TCP/IP analysis. Holds the Google Cybersecurity Professional Certificate and ISC2 CC; CompTIA Security+ and Splunk Core Certified User in progress. The physical security background isn't a detour. It built the habits that matter in a SOC: accurate documentation under pressure, clear escalation, and knowing when something is off before it becomes a full incident. Ready to bring that combination to a Tier 1 SOC role on day one.</p>
+
+  <h2>Technical skills</h2>
+  <dl class="skills">
+    <dt>Operating systems</dt><dd>Windows 10/11, Linux (Ubuntu, Kali), command-line administration</dd>
+    <dt>SIEM / analysis</dt><dd>Splunk (log ingestion, search, basic dashboards), Wireshark, Tcpdump</dd>
+    <dt>Networking</dt><dd>TCP/IP, DNS, DHCP, packet analysis, basic network troubleshooting</dd>
+    <dt>Scripting / data</dt><dd>SQL (MySQL, BigQuery), Python (basic scripting), Bash</dd>
+    <dt>Security concepts</dt><dd>Log analysis, access control, identity management, vulnerability fundamentals, incident response</dd>
+    <dt>Ticketing</dt><dd>ServiceNow, Jira, Zendesk: logging, tracking, and escalating issues accurately</dd>
+    <dt>Documentation</dt><dd>Incident reports, risk assessments, knowledge base articles, policy documentation</dd>
+    <dt>Hardware</dt><dd>PC assembly, component replacement, peripheral setup, diagnostics</dd>
+  </dl>
+
+  <h2>Experience</h2>
+  <div class="job">
+    <div class="head"><h3>Cybersecurity Student (Hybrid)</h3><span class="when">May 2025 – present</span></div>
+    <div class="org">Per Scholas Chicago — full-time, employer-partnered training program. Graduates placed at JPMorgan Chase, Accenture, Cognizant, and other enterprise organizations.</div>
+    <ul>
+      <li>Perform packet capture and traffic analysis with Wireshark on live lab environments; identify anomalous traffic, flag suspicious connections, and document findings in a format ready for escalation.</li>
+      <li>Work through hands-on Splunk labs covering log ingestion, SPL queries, and alert configuration.</li>
+      <li>Apply the NIST Cybersecurity Framework and incident response lifecycle in lab scenarios; know where a Tier 1 analyst fits in the containment and escalation chain.</li>
+      <li>Completing CompTIA Security+ and Splunk Core Certified User through the program.</li>
+      <li>Maintain detailed lab notes and findings documentation, to the same standard used in physical security operations.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="head"><h3>Security Guard</h3><span class="when">Apr 2024 – Sep 2025</span></div>
+    <div class="org">Securitas Security Services USA, Chicago, IL</div>
+    <ul>
+      <li>Monitored access control and CCTV across high-traffic corporate sites; logged every anomaly and escalated with full context. Same workflow a Tier 1 analyst runs on alerts.</li>
+      <li>Managed credentialing and visitor screening for 100+ daily visitors; zero unauthorized access incidents across the full assignment.</li>
+      <li>Coordinated with law enforcement and site management during incidents; produced documentation that closed cases faster and held up under review.</li>
+      <li>Assigned to priority client locations, including banks and financial offices, based on consistent performance and client trust.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="head"><h3>Security Officer / Supervisor</h3><span class="when">Nov 2022 – Jul 2023</span></div>
+    <div class="org">Titan Security Group, Chicago, IL</div>
+    <ul>
+      <li>Supervised security personnel across multiple sites; standardized shift handoffs, cutting coverage gaps by an estimated 30%.</li>
+      <li>Documented anomalies that led to security protocol updates at two-plus client locations.</li>
+      <li>Wrote incident reports and risk assessments that fed client security reviews; the format was adopted as the site-wide template.</li>
+      <li>Primary liaison with law enforcement during active incidents.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="head"><h3>Self-Directed IT Support</h3><span class="when">Ongoing</span></div>
+    <div class="org">Friends and family</div>
+    <ul>
+      <li>Ten-plus years resolving hardware, software, and connectivity issues across Windows, Android, and iOS: PC builds, OS reinstalls, malware removal, driver updates, home network troubleshooting.</li>
+    </ul>
+  </div>
+
+  <h2>Labs and projects</h2>
+  <div class="job">
+    <div class="head"><h3>TryHackMe</h3><span class="when">2024 – 2025</span></div>
+    <ul>
+      <li>Modules on Linux fundamentals, Windows administration, log analysis, Wireshark packet inspection, and Splunk — with written findings for each.</li>
+      <li>Windows forensics: MFT and Prefetch parsing with EZ Tools, registry navigation, UAC, basic artifact recovery.</li>
+      <li>Domain hijack investigation and Metasploitable 2 exploit lab documented in the portfolio with methodology and findings.</li>
+    </ul>
+  </div>
+  <div class="job">
+    <div class="head"><h3>Cybersecurity Acronyms Reference Tool</h3><span class="when">Live</span></div>
+    <ul>
+      <li>Built and deployed a searchable terminology reference on GitHub Pages, for new analysts getting up to speed on domain vocabulary.</li>
+    </ul>
+  </div>
+
+  <h2>Certifications and education</h2>
+  <div class="certs">
+    <div class="cert"><div class="n">ISC² Certified in Cybersecurity (CC)</div><div class="s">Earned</div></div>
+    <div class="cert"><div class="n">Google Cybersecurity Professional Certificate</div><div class="s">Earned</div></div>
+    <div class="cert"><div class="n">CompTIA Security+ (SY0-701)</div><div class="s">In progress · Per Scholas</div></div>
+    <div class="cert"><div class="n">Splunk Core Certified User</div><div class="s">In progress · Per Scholas</div></div>
+    <div class="cert" style="grid-column:1/-1"><div class="n">Per Scholas Chicago — Cybersecurity Program</div><div class="s">May 2025 cohort · In progress</div></div>
+  </div>
+</main>
+
+</body>
+</html>

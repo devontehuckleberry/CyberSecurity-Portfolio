@@ -1,0 +1,130 @@
+.section {
+  padding-block: 4rem 5rem;
+}
+
+.eyebrow {
+  font-size: .68rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: .8rem;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: var(--red);
+  flex-shrink: 0;
+}
+
+.h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: .8rem;
+  line-height: 1.25;
+}
+
+.h2 b {
+  color: var(--red);
+}
+
+.ssub {
+  font-size: .92rem;
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  max-width: 56ch;
+  text-wrap: pretty;
+}
+
+.ssub code {
+  color: var(--red);
+  background: oklch(from var(--red) l c h / 12%);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: .85em;
+}
+
+.termWindow {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.termHead {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .8rem 1.1rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.termHead i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: oklch(100% 0 0 / 14%);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.termHead i:first-child {
+  background: oklch(from var(--red) l c h / 75%);
+}
+
+.tTitle {
+  font-size: .66rem;
+  letter-spacing: .14em;
+  color: var(--faint);
+  margin-inline: auto;
+  text-transform: uppercase;
+}
+
+.termBody {
+  font-size: .86rem;
+  line-height: 1.9;
+  padding: 1.2rem 1.3rem;
+  min-height: 280px;
+  max-height: 380px;
+  overflow-y: auto;
+  cursor: text;
+}
+
+.histCmd {
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.histCmd .p {
+  color: var(--red);
+}
+
+.out {
+  color: var(--muted);
+  white-space: pre-wrap;
+  display: block;
+}
+
+.termLine {
+  display: flex;
+  align-items: center;
+}
+
+.p {
+  color: var(--red);
+  flex-shrink: 0;
+}
+
+.termLine input {
+  flex: 1;
+  background: none;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font: inherit;
+  caret-color: var(--red);
+  min-width: 0;
+}

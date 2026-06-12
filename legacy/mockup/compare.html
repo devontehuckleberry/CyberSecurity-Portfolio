@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Before / After — Portfolio Hero</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{height:100vh;display:flex;flex-direction:column;background:#0a0a0a;font-family:ui-monospace,monospace}
+header{display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;border-bottom:1px solid #222}
+header span{color:#888;font-size:.72rem;margin-right:auto}
+button{font:inherit;font-size:.72rem;color:#aaa;background:#161616;border:1px solid #2a2a2a;padding:.45rem 1rem;border-radius:8px;cursor:pointer}
+button.on{color:#fff;border-color:#E63946;background:#1f1316}
+main{flex:1;display:flex}
+.pane{flex:1;display:flex;flex-direction:column;min-width:0}
+.pane h2{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:#777;padding:.5rem 1rem;background:#111;border-bottom:1px solid #222}
+.pane iframe{flex:1;border:0;width:100%}
+.pane + .pane{border-left:1px solid #222}
+body.before .pane.after,body.after .pane.before{display:none}
+</style>
+</head>
+<body class="split">
+<header>
+  <span>hero prototype — sign-off viewer</span>
+  <button data-mode="before">Before</button>
+  <button data-mode="split" class="on">Split</button>
+  <button data-mode="after">After</button>
+</header>
+<main>
+  <div class="pane before"><h2>Before — current live site</h2><iframe src="../index.html" title="before"></iframe></div>
+  <div class="pane after"><h2>After — proposed direction (v2)</h2><iframe src="after2.html" title="after"></iframe></div>
+</main>
+<script>
+document.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+  document.body.className = b.dataset.mode;
+  document.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+}));
+</script>
+</body>
+</html>
