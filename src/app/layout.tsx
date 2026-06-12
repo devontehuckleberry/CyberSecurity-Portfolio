@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -62,6 +64,8 @@ export default function RootLayout({
           src="https://www.google.com/recaptcha/api.js?render=6LdlR_wsAAAAADqfJnLX3d0E65kv42C42Yg7rs9g"
           strategy="lazyOnload"
         />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
