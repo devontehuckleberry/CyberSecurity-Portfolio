@@ -10,6 +10,17 @@ interface GlowButtonProps {
 
 export default function GlowButton({ children, variant = 'ghost', href, onClick, className = '' }: GlowButtonProps) {
   const cls = `${styles.btn} ${variant === 'primary' ? styles.primary : styles.ghost} ${className}`
-  if (href) return <a href={href} className={cls}>{children}</a>
-  return <button onClick={onClick} className={cls}>{children}</button>
+  if (href) {
+    const isExternal = href.startsWith('http')
+    return (
+      <a
+        href={href}
+        className={cls}
+        {...(isExternal ? { rel: 'noopener noreferrer', target: '_blank' } : {})}
+      >
+        {children}
+      </a>
+    )
+  }
+  return <button type="button" onClick={onClick} className={cls}>{children}</button>
 }

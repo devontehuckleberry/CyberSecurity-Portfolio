@@ -10,6 +10,11 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
+
 export const metadata: Metadata = {
   title: "Devonte Huckleberry — Cybersecurity Portfolio",
   description: "SOC analyst, IAM, and purple team projects by Devonte Huckleberry.",
