@@ -287,16 +287,18 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
 }
 
 const CONFIG: ColorBendsConfig = {
-  colors: ['#7a1a0e', '#4a0808', '#8b2010', '#3d0d0d', '#6b1510'],
+  colors: ['#FF4D5A', '#C1121F', '#4A0E14'],
+  rotation: 45,
+  autoRotate: 4,
   speed: 0.18,
-  intensity: 1.3,
-  noise: 0.12,
-  warpStrength: 1.2,
-  mouseInfluence: 0.8,
-  parallax: 0.4,
-  bandWidth: 5,
-  rotation: 90,
-  transparent: false,
+  scale: 1.4,
+  warpStrength: 1,
+  mouseInfluence: 0.6,
+  parallax: 0.5,
+  noise: 0.07,
+  intensity: 1.15,
+  bandWidth: 6,
+  transparent: true,
 }
 
 export default function ColorBends() {

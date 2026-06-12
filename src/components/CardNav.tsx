@@ -31,11 +31,7 @@ export default function CardNav() {
             Devonte<b>.</b>
           </a>
 
-          <a
-            className={`btn btn-primary ${styles.cnCta}`}
-            href="#contact"
-            onClick={close}
-          >
+          <a className={styles.cnCta} href="#contact" onClick={close}>
             Hire me
           </a>
         </div>

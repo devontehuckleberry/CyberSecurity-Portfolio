@@ -16,14 +16,14 @@ export default function Hero() {
         <div className={styles.inner}>
           {/* Text column */}
           <div>
-            <h1 className={styles.heading}>
+            <h1 className={`${styles.heading} rv d1`}>
               Devonte<br />
               <span className={styles.headingAccent}>Huckleberry</span>
             </h1>
 
-            <p className={styles.role}>Security · Identity · IT Operations</p>
+            <p className={`${styles.role} rv d2`}>Security · Identity · IT Operations</p>
 
-            <p className={styles.desc}>
+            <p className={`${styles.desc} rv d3`}>
               Ten-plus years of hands-on IT, a physical-security background, and formal training through Per
               Scholas Chicago. I read logs in <strong>Splunk</strong>, manage identities in{' '}
               <strong>Active Directory</strong>, write SQL against real datasets, and document incidents in
@@ -31,17 +31,17 @@ export default function Hero() {
               certifications earned or in progress, and one real incident worked end to end.
             </p>
 
-            <div className={styles.btns}>
+            <div className={`${styles.btns} rv d4`}>
               <GlowButton href="#projects" variant="primary">View my work</GlowButton>
               <GlowButton href="#contact" variant="ghost">Get in touch</GlowButton>
             </div>
 
-            <div className={`${styles.btns} ${styles.btnsRow2}`}>
-              <GlowButton href="#about" variant="ghost">Read more</GlowButton>
+            <div className={`${styles.btns} ${styles.btnsRow2} rv d4`}>
+              <GlowButton href="#about" variant="ghost" down>Read more</GlowButton>
               <GlowButton href="/resume" variant="ghost">View resume</GlowButton>
             </div>
 
-            <div className={styles.stats}>
+            <div className={`${styles.stats} rv d4`}>
               {STATS.map((stat, i) => (
                 <>
                   {i > 0 && <div key={`rule-${i}`} className={styles.statRule} aria-hidden="true" />}

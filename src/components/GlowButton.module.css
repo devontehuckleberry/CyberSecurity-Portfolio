@@ -1,40 +1,43 @@
 .btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
   font-family: var(--mono);
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
   padding: 0.95rem 1.7rem;
   clip-path: var(--chamfer);
-  border: none;
+  position: relative;
+  isolation: isolate;
   cursor: pointer;
-  overflow: hidden;
-  transition: opacity 0.2s;
+  border: 0;
+  transition: color 0.25s ease;
 }
 
-.btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
+.btn::after { content: "→"; transition: translate 0.25s ease; }
+.btn:hover::after { translate: 5px 0; }
+.btn:active { scale: 0.97; }
 
-.btn:hover::after { opacity: 1; }
+.down::after { content: "↓"; }
+.down:hover::after { translate: 0 4px; }
 
 .primary {
   color: #fff;
   background: linear-gradient(180deg, var(--red), var(--red-deep));
 }
-
-.primary::after {
+.primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: oklch(from var(--red) calc(l + 0.12) c h);
+  transform: translateX(-101%);
+  transition: transform 0.3s cubic-bezier(0.65, 0.05, 0, 1);
 }
+.primary:hover::before { transform: translateX(0); }
 
 .ghost {
   color: var(--text);
@@ -42,7 +45,14 @@
   outline: 1px solid var(--hairline);
   outline-offset: -1px;
 }
-
-.ghost::after {
+.ghost::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: linear-gradient(180deg, var(--red), var(--red-deep));
+  transform: translateY(101%);
+  transition: transform 0.3s cubic-bezier(0.65, 0.05, 0, 1);
 }
+.ghost:hover { color: #fff; }
+.ghost:hover::before { transform: translateY(0); }

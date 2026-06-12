@@ -6,10 +6,11 @@ interface GlowButtonProps {
   href?: string
   onClick?: () => void
   className?: string
+  down?: boolean
 }
 
-export default function GlowButton({ children, variant = 'ghost', href, onClick, className = '' }: GlowButtonProps) {
-  const cls = `${styles.btn} ${variant === 'primary' ? styles.primary : styles.ghost} ${className}`
+export default function GlowButton({ children, variant = 'ghost', href, onClick, className = '', down = false }: GlowButtonProps) {
+  const cls = `${styles.btn} ${variant === 'primary' ? styles.primary : styles.ghost} ${down ? styles.down : ''} ${className}`.trim()
   if (href) {
     const isExternal = href.startsWith('http')
     return (

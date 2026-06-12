@@ -17,7 +17,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
 
 body {
   background: var(--bg);
@@ -63,3 +63,20 @@ body {
   transition: opacity 0.3s ease;
 }
 .glow:hover::before { opacity: 1; }
+
+/* Reveal animations (entrance + scroll-driven) */
+@media (prefers-reduced-motion: no-preference) {
+  .rv { opacity: 0; translate: 0 20px; animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+  .rv.d1 { animation-delay: 0.07s; }
+  .rv.d2 { animation-delay: 0.14s; }
+  .rv.d3 { animation-delay: 0.21s; }
+  .rv.d4 { animation-delay: 0.3s; }
+  @keyframes rise { to { opacity: 1; translate: 0 0; } }
+  .srv {
+    opacity: 0;
+    translate: 0 28px;
+    animation: rise 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}

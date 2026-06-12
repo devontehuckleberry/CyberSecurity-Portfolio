@@ -91,7 +91,7 @@ export default function Terminal() {
           Everything on this page, queryable. Type <code>help</code> to see the commands.
         </p>
 
-        <div className={`glass glow ${styles.termWindow}`}>
+        <div className={`glass glow srv ${styles.termWindow}`}>
           <div className={styles.termHead}>
             <i /><i /><i />
             <div className={styles.tTitle}>devonte@portfolio</div>

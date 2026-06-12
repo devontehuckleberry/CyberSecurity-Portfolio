@@ -46,7 +46,7 @@ export default function ContactForm() {
 
   return (
     <form
-      className={`glass glow ${styles.form}`}
+      className={`glass glow srv ${styles.form}`}
       onSubmit={handleSubmit}
       noValidate
     >
