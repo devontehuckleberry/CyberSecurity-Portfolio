@@ -170,6 +170,11 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
   gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT))
   gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG))
   gl.linkProgram(prog)
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.error('ColorBends shader link failed:', gl.getProgramInfoLog(prog))
+    gl.deleteProgram(prog)
+    return { dispose() {} }
+  }
   gl.useProgram(prog)
 
   const buf = gl.createBuffer()
@@ -213,9 +218,8 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
   gl.uniform3fv(U('uColors'), flat)
   gl.uniform1i(U('uColorCount'), colorArr.length)
 
-  const dpr = Math.min(window.devicePixelRatio || 1, 2)
-
   function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
     const w = canvas.parentElement?.clientWidth || window.innerWidth || 1
     const h = canvas.parentElement?.clientHeight || window.innerHeight || 1
     canvas.width = w * dpr
@@ -276,6 +280,8 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
       if (rafId !== null) cancelAnimationFrame(rafId)
       ro.disconnect()
       window.removeEventListener('pointermove', onMove)
+      gl.deleteProgram(prog)
+      if (buf) gl.deleteBuffer(buf)
     },
   }
 }

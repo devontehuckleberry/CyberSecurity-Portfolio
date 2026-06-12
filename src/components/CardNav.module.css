@@ -2,6 +2,7 @@
   position: fixed;
   top: 1.1rem;
   left: 50%;
+  transform: translateX(-50%);
   translate: -50% 0;
   z-index: 90;
   width: min(920px, 92vw);
@@ -71,6 +72,13 @@
   gap: 0.7rem;
   padding: 0.7rem;
   height: calc(100% - 60px);
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s 0.45s;
+}
+
+.cardNav.open .cnCards {
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0s 0s;
 }
 
 .cnCard {
@@ -97,6 +105,7 @@
   transition-delay: 0.14s;
 }
 
+/* Relative oklch() requires Chrome 111+, Safari 16.4+, Firefox 113+ */
 .cnCardWork {
   background: linear-gradient(
     180deg,

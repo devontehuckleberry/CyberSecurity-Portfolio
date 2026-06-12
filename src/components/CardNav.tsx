@@ -19,7 +19,7 @@ export default function CardNav() {
         <div className={styles.cnTop}>
           <button
             className={styles.cnBurger}
-            aria-label="Menu"
+            aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             onClick={() => setOpen((prev) => !prev)}
           >
@@ -65,6 +65,7 @@ export default function CardNav() {
               href="https://linkedin.com/in/devontehuckleberry"
               rel="noopener noreferrer"
               target="_blank"
+              onClick={close}
             >
               LinkedIn
             </a>
