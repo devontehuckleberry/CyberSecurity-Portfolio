@@ -1,9 +1,9 @@
 import ColorBends from '@/components/ColorBends'
 import CardNav from '@/components/CardNav'
+import Hero from '@/components/Hero'
+import Certs from '@/components/Certs'
 
-const SECTIONS = [
-  'hero',
-  'certs',
+const PLACEHOLDER_SECTIONS = [
   'about',
   'capabilities',
   'projects',
@@ -17,7 +17,9 @@ export default function Home() {
       <ColorBends />
       <CardNav />
       <main style={{ position: 'relative', zIndex: 2 }}>
-        {SECTIONS.map((id) => (
+        <Hero />
+        <Certs />
+        {PLACEHOLDER_SECTIONS.map((id) => (
           <section
             key={id}
             id={id}
