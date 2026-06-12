@@ -1,0 +1,136 @@
+.aboutGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2.5rem, 6vw, 4rem);
+  padding-block: 4rem 5rem;
+  align-items: start;
+}
+
+.eyebrow {
+  font-size: .68rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: .8rem;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: var(--red);
+  flex-shrink: 0;
+}
+
+.h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: 1.4rem;
+  line-height: 1.25;
+}
+
+.h2 b {
+  color: var(--red);
+}
+
+.body p {
+  font-size: .92rem;
+  color: var(--muted);
+  line-height: 1.95;
+  margin-bottom: 1.2rem;
+  text-wrap: pretty;
+}
+
+.body p:last-of-type {
+  margin-bottom: 1.6rem;
+}
+
+.body p strong {
+  color: var(--text);
+}
+
+.btns {
+  display: flex;
+  gap: .8rem;
+  flex-wrap: wrap;
+}
+
+/* Career path panel */
+.pathPanel {
+  padding: 1.8rem;
+  border-radius: 16px;
+  font-size: .78rem;
+  line-height: 2.15;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.panelTitle {
+  font-size: .6rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 1rem;
+}
+
+.ph {
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--faint);
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: .6rem;
+  margin-top: 1rem;
+}
+
+.ph::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--hairline);
+}
+
+.r {
+  color: var(--red);
+}
+
+.w {
+  color: oklch(78% 0.14 85);
+}
+
+.t {
+  color: var(--text);
+}
+
+.tgt {
+  color: oklch(78% 0.14 85);
+  font-size: .58rem;
+  border: 1px solid oklch(from oklch(78% 0.14 85) l c h / 40%);
+  padding: 1px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  line-height: 1.6;
+  vertical-align: middle;
+  margin-left: .3rem;
+}
+
+.ind0 { padding-left: 0; }
+.ind1 { padding-left: 1rem; }
+.ind2 { padding-left: 2rem; }
+.ind3 { padding-left: 3rem; }
+.ind4 { padding-left: 4rem; }
+
+.pathLine {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .aboutGrid {
+    grid-template-columns: 1fr;
+  }
+}

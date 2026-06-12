@@ -6,9 +6,10 @@ interface GlassCardProps {
   className?: string
   glowColor?: string
   style?: React.CSSProperties
+  onClick?: () => void
 }
 
-export default function GlassCard({ children, className = '', glowColor, style }: GlassCardProps) {
+export default function GlassCard({ children, className = '', glowColor, style, onClick }: GlassCardProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   function handleMouseMove(e: MouseEvent<HTMLDivElement>) {
@@ -26,6 +27,7 @@ export default function GlassCard({ children, className = '', glowColor, style }
       ref={ref}
       className={`glass glow ${className}`}
       onMouseMove={handleMouseMove}
+      onClick={onClick}
       style={{ position: 'relative', ...style, ...(glowColor ? { '--glow': glowColor } as React.CSSProperties : {}) }}
     >
       {children}
