@@ -1,0 +1,50 @@
+.page { position: relative; z-index: 2; padding-block: 8rem 4rem; }
+.inner { max-width: 780px; margin-inline: auto; padding-inline: clamp(1rem, 4vw, 2.5rem); }
+
+.header { margin-bottom: 2.4rem; }
+.name { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
+.role { font-size: .82rem; color: var(--red); letter-spacing: .14em; text-transform: uppercase; margin-top: .3rem; }
+.location { font-size: .8rem; color: var(--faint); margin-top: .25rem; }
+.actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.4rem; }
+
+h2.section {
+  font-size: .72rem; font-weight: 600; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--red); margin: 2.8rem 0 1.1rem; display: flex; align-items: center; gap: .9rem;
+}
+h2.section::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+
+p.summary { font-size: .95rem; line-height: 1.85; color: var(--muted); text-wrap: pretty; }
+
+/* Skills */
+.skills { display: grid; grid-template-columns: max-content 1fr; gap: .55rem 1.4rem; font-size: .86rem; }
+.skills dt { font-size: .7rem; letter-spacing: .06em; color: var(--faint); text-transform: uppercase; padding-top: .15rem; }
+.skills dd { color: var(--muted); line-height: 1.6; }
+
+/* Job */
+.job { margin-bottom: 1.9rem; }
+.jobHead { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.job h3 { font-size: .98rem; font-weight: 600; }
+.when { font-size: .68rem; color: var(--faint); letter-spacing: .06em; }
+.org { font-size: .8rem; color: var(--faint); margin: .2rem 0 .6rem; }
+.job ul { list-style: none; padding: 0; }
+.job li { font-size: .88rem; color: var(--muted); line-height: 1.75; padding-left: 1.15rem; position: relative; margin-bottom: .35rem; }
+.job li::before { content: "▸"; position: absolute; left: 0; color: var(--red); }
+
+/* Certs */
+.certs { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+.cert { border: 1px solid var(--hairline); border-radius: 12px; padding: .9rem 1.05rem; background: oklch(100% 0 0 / 3%); }
+.certName { font-size: .8rem; font-weight: 600; line-height: 1.4; }
+.certStatus { font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-top: .3rem; }
+.certFull { grid-column: 1 / -1; }
+
+/* Contact links */
+.contact { display: flex; gap: .5rem 1.4rem; flex-wrap: wrap; margin-top: 1rem; font-size: .72rem; color: var(--muted); }
+.contact a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.contact a:hover { color: var(--red); border-color: var(--red); }
+
+@media (max-width: 640px) {
+  .skills { grid-template-columns: 1fr; gap: .1rem .8rem; }
+  .skills dt { margin-top: .6rem; }
+  .certs { grid-template-columns: 1fr; }
+  .certFull { grid-column: 1; }
+}
