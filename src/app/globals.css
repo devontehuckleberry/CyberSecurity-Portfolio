@@ -39,11 +39,12 @@ body {
 }
 
 /* Cursor-tracking conic glow (requires JS to set --mx/--my) */
-.glow { --mx: 50%; --my: 50%; }
+.glow { --mx: 50%; --my: 50%; position: relative; }
 .glow::before {
   content: "";
   position: absolute;
   inset: -1px;
+  pointer-events: none;
   border-radius: inherit;
   background: conic-gradient(
     from 0deg at var(--mx) var(--my),

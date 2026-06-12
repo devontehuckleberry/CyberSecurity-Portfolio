@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, KeyboardEvent } from 'react'
+import { useState, useRef, KeyboardEvent } from 'react'
 import Wrap from '@/components/Wrap'
 import styles from './Terminal.module.css'
 
@@ -46,10 +46,6 @@ export default function Terminal() {
   const [input, setInput] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
 
   function scrollBottom() {
     requestAnimationFrame(() => {
