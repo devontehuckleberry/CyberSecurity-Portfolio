@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devonte Huckleberry — Security · Identity · IT Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ================= TOKENS ================= */
+:root{
+  --bg: oklch(16% 0.012 20);
+  --text: oklch(95% 0.004 30);
+  --muted: oklch(82% 0.008 30);
+  --faint: oklch(67% 0.01 30);
+  --red: oklch(62% 0.21 22);
+  --red-deep: oklch(44% 0.17 24);
+  --red-dim: oklch(from var(--red) l c h / 14%);
+  --green: oklch(80% 0.21 152);          /* Foothold only */
+  --warn: oklch(78% 0.14 85);
+  --hairline: oklch(100% 0 0 / 11%);
+  --glass-fill: oklch(100% 0 0 / 5%);
+  --mono: "IBM Plex Mono", monospace;
+  --glow: var(--red);
+  --chamfer: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--mono);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--red);color:#fff}
+section{scroll-margin-top:95px}
+
+/* ================= BACKGROUND ================= */
+#bg{position:fixed;inset:0;z-index:-2}
+.scrim{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    linear-gradient(180deg, oklch(0% 0 0 / 30%), transparent 30%, transparent 75%, oklch(0% 0 0 / 35%)),
+    radial-gradient(ellipse 70% 60% at 28% 42%, oklch(0% 0 0 / 38%), transparent 70%);
+}
+
+/* ================= GLASS ================= */
+.glass{
+  position:relative;
+  background:var(--glass-fill);
+  border:1px solid var(--hairline);
+  border-radius:16px;
+  box-shadow:inset 0 1px 0 oklch(100% 0 0 / 11%), 0 20px 50px oklch(0% 0 0 / 38%);
+  backdrop-filter:blur(20px) saturate(1.2);
+  -webkit-backdrop-filter:blur(20px) saturate(1.2);
+}
+.glow{--mx:50%;--my:50%}
+.glow::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+  background:conic-gradient(from 0deg at var(--mx) var(--my),
+    transparent 0deg, oklch(from var(--glow) l c h / 60%) 80deg,
+    transparent 160deg, oklch(from var(--glow) l c h / 30%) 260deg, transparent 340deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  opacity:0;transition:opacity .35s ease;pointer-events:none;
+}
+.glow:hover::before{opacity:1}
+
+/* ================= CARD NAV ================= */
+.card-nav-wrap{position:fixed;top:1.1rem;left:50%;translate:-50% 0;z-index:90;width:min(920px, 92vw)}
+.card-nav{border-radius:16px;overflow:hidden;height:60px;transition:height .45s cubic-bezier(.65,.05,0,1)}
+.card-nav.open{height:var(--nav-h, 290px)}
+.cn-top{height:60px;display:flex;align-items:center;justify-content:space-between;padding-inline:1rem}
+.cn-burger{display:flex;flex-direction:column;gap:6px;cursor:pointer;padding:.6rem;background:none;border:0}
+.cn-burger span{display:block;width:26px;height:2px;background:var(--text);transition:transform .3s ease}
+.card-nav.open .cn-burger span:first-child{transform:translateY(4px) rotate(45deg)}
+.card-nav.open .cn-burger span:last-child{transform:translateY(-4px) rotate(-45deg)}
+.cn-logo{font-family:var(--mono);font-weight:600;font-size:1.05rem;letter-spacing:.04em;color:var(--text);text-decoration:none}
+.cn-logo b{color:var(--red)}
+.cn-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;padding:.7rem;height:calc(100% - 60px)}
+.cn-card{
+  border-radius:12px;padding:1.05rem;display:flex;flex-direction:column;
+  border:1px solid var(--hairline);
+  opacity:0;transform:translateY(40px);
+  transition:opacity .4s ease, transform .45s cubic-bezier(.65,.05,0,1);
+}
+.cn-card:nth-child(1){background:linear-gradient(180deg, oklch(from var(--red-deep) l c h / 55%), oklch(from var(--red-deep) calc(l*0.6) c h / 45%))}
+.cn-card:nth-child(2){background:oklch(100% 0 0 / 6%)}
+.cn-card:nth-child(3){background:oklch(0% 0 0 / 30%)}
+.card-nav.open .cn-card{opacity:1;transform:translateY(0)}
+.card-nav.open .cn-card:nth-child(2){transition-delay:.07s}
+.card-nav.open .cn-card:nth-child(3){transition-delay:.14s}
+.cn-card .cn-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:auto}
+.cn-card a{
+  font-size:.95rem;color:var(--text);text-decoration:none;
+  display:flex;align-items:center;gap:.5rem;padding-block:.32rem;
+}
+.cn-card a::before{content:"↗";font-size:.8rem;color:var(--muted);transition:translate .2s, color .2s}
+.cn-card a:hover{color:#fff}
+.cn-card a:hover::before{translate:2px -2px;color:var(--red)}
+
+/* ================= BUTTONS ================= */
+.btn{
+  font-family:var(--mono);font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.6rem;
+  padding:.95rem 1.7rem;clip-path:var(--chamfer);
+  position:relative;isolation:isolate;cursor:pointer;border:0;
+  transition:color .25s ease;
+}
+.btn::after{content:"→";transition:translate .25s ease}
+.btn:hover::after{translate:5px 0}
+.btn.down::after{content:"↓"}
+.btn.down:hover::after{translate:0 4px}
+.btn-primary{color:#fff;background:linear-gradient(180deg, var(--red), var(--red-deep))}
+.btn-primary::before{
+  content:"";position:absolute;inset:0;z-index:-1;background:oklch(from var(--red) calc(l + .12) c h);
+  transform:translateX(-101%);transition:transform .3s cubic-bezier(.65,.05,0,1);
+}
+.btn-primary:hover::before{transform:translateX(0)}
+.btn-ghost{color:var(--text);background:oklch(100% 0 0 / 6%);outline:1px solid var(--hairline);outline-offset:-1px}
+.btn-ghost::before{
+  content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg, var(--red), var(--red-deep));
+  transform:translateY(101%);transition:transform .3s cubic-bezier(.65,.05,0,1);
+}
+.btn-ghost:hover{color:#fff}
+.btn-ghost:hover::before{transform:translateY(0)}
+.btn:active{scale:.97}
+.btn-sm{padding:.7rem 1.2rem;font-size:.7rem}
+.cn-cta{padding:.6rem 1.1rem}
+
+/* ================= LAYOUT ================= */
+.wrap{max-width:1180px;margin-inline:auto;padding-inline:clamp(1.25rem, 4vw, 3rem)}
+section{padding-block:5.5rem}
+.eyebrow{
+  font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--red);
+  display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;
+}
+.eyebrow::before{content:"";width:36px;height:1px;background:var(--red)}
+h2.stitle{font-size:clamp(1.7rem, 3.4vw, 2.4rem);font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem}
+h2.stitle b{color:var(--red);font-weight:700}
+.ssub{font-size:.98rem;color:var(--muted);max-width:62ch;line-height:1.8;margin-bottom:3rem}
+
+/* ================= HERO ================= */
+#hero{min-height:100svh;display:grid;align-items:center;padding-block:7rem 4rem}
+.hero-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(2.5rem,6vw,5rem);align-items:center}
+h1{font-size:clamp(2.5rem, 5.4vw, 4.1rem);font-weight:700;line-height:1.05;letter-spacing:-.03em;text-wrap:balance;margin-bottom:1rem}
+h1 em{font-style:normal;color:var(--red)}
+.role{font-size:.88rem;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;margin-bottom:1.6rem}
+.hero-desc{font-size:.96rem;color:var(--muted);line-height:1.9;max-width:58ch;text-wrap:pretty;margin-bottom:2.2rem}
+.hero-desc strong{color:var(--text);font-weight:600}
+.btns{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:1rem}
+.btns.row2{margin-bottom:2.4rem}
+.stats{display:flex;gap:2.2rem}
+.stat .num{font-size:1.85rem;font-weight:600}
+.stat .num b{color:var(--red);font-weight:600}
+.stat .lbl{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-top:.2rem}
+.stat-rule{width:1px;background:var(--hairline)}
+.hero-photo{position:relative;max-width:420px;justify-self:end;width:100%}
+.hero-photo .frame{padding:.8rem;border-radius:20px}
+.hero-photo img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;border-radius:12px;filter:saturate(.94) contrast(1.03)}
+.corner{position:absolute;width:34px;height:34px;border:2px solid var(--red);z-index:2}
+.corner.tl{top:-9px;left:-9px;border-right:0;border-bottom:0}
+.corner.br{bottom:-9px;right:-9px;border-left:0;border-top:0}
+.open-chip{
+  position:absolute;bottom:1.6rem;left:50%;translate:-50% 0;white-space:nowrap;
+  font-size:.68rem;letter-spacing:.1em;text-decoration:none;
+  padding:.65rem 1.2rem;border-radius:999px;color:var(--text);
+  transition:color .2s, border-color .2s;
+}
+.open-chip:hover{color:var(--red);border-color:oklch(from var(--red) l c h / 50%)}
+
+/* ================= CERTS STRIP ================= */
+#certs{padding-block:1rem 4.5rem}
+.cert-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.cert{padding:1.15rem 1.3rem;border-radius:14px}
+.cert .c-issuer{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.45rem}
+.cert .c-name{font-size:.9rem;font-weight:600;line-height:1.4;margin-bottom:.5rem}
+.cert .c-state{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+
+/* ================= ABOUT ================= */
+.about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2.5rem,5vw,4.5rem);align-items:start}
+.about-grid p{font-size:.92rem;color:var(--muted);line-height:1.95;margin-bottom:1.2rem;text-wrap:pretty}
+.about-grid p strong{color:var(--text);font-weight:600}
+.about-btns{display:flex;gap:.9rem;flex-wrap:wrap;margin-top:1.8rem}
+.path-panel{padding:1.8rem;border-radius:16px;font-size:.78rem;line-height:2.15;color:var(--muted)}
+.path-panel .ph{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.path-panel .ph::after{content:"";flex:1;height:1px;background:var(--hairline)}
+.path-panel .ph:not(:first-child){margin-top:1.3rem}
+.path-panel .t{color:var(--text)}
+.path-panel .r{color:var(--red)}
+.path-panel .w{color:var(--warn)}
+.path-panel .tgt{color:var(--warn);font-size:.58rem;border:1px solid oklch(from var(--warn) l c h / 40%);padding:1px 6px;border-radius:4px}
+.path-panel .ind1{padding-left:1.2rem}
+.path-panel .ind2{padding-left:2.4rem}
+.path-panel .ind3{padding-left:3.6rem}
+.path-panel .ind4{padding-left:4.8rem}
+.path-panel a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--hairline)}
+.path-panel a:hover{color:var(--red);border-color:var(--red)}
+
+/* ================= CAPABILITIES ================= */
+.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.cap{padding:1.6rem;border-radius:16px}
+.cap .n{font-size:.7rem;letter-spacing:.16em;color:var(--red);margin-bottom:1rem}
+.cap h3{font-size:1.05rem;font-weight:600;line-height:1.4;margin-bottom:.7rem}
+.cap p{font-size:.88rem;color:var(--muted);line-height:1.8;text-wrap:pretty}
+
+/* ================= TERMINAL ================= */
+.term-window{max-width:780px;margin-inline:auto;border-radius:16px;overflow:hidden}
+.term-head{display:flex;align-items:center;gap:.45rem;padding:.8rem 1.1rem;border-bottom:1px solid var(--hairline)}
+.term-head i{width:11px;height:11px;border-radius:50%;background:oklch(100% 0 0 / 14%)}
+.term-head i:nth-child(1){background:oklch(from var(--red) l c h / 75%)}
+.term-head .t-title{font-size:.66rem;letter-spacing:.14em;color:var(--faint);margin-inline:auto;text-transform:uppercase}
+.term-body{font-size:.86rem;line-height:1.9;padding:1.2rem 1.3rem;min-height:280px;max-height:380px;overflow-y:auto;scrollbar-color:var(--red-deep) transparent;scrollbar-width:thin}
+.term-body .p{color:var(--red)}
+.term-body .out{color:var(--muted);white-space:pre-wrap}
+.term-line{display:flex;gap:.55rem;align-items:baseline}
+.term-line input{flex:1;background:none;border:0;outline:0;color:var(--text);font:inherit;caret-color:var(--red)}
+
+/* ================= PROJECTS ================= */
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.pcard{
+  text-align:left;cursor:pointer;border-radius:16px;padding:1.7rem;color:inherit;
+  font-family:inherit;transition:transform .3s ease;width:100%;
+}
+.pcard:hover{transform:translateY(-4px)}
+.pcard .tag{
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--red);display:flex;align-items:center;gap:.55rem;margin-bottom:1rem;
+}
+.pcard .tag::before{content:"";width:6px;height:6px;background:currentColor;rotate:45deg}
+.pcard h3{font-size:1.16rem;font-weight:600;line-height:1.35;margin-bottom:.7rem;text-wrap:balance}
+.pcard p{font-size:.9rem;color:var(--muted);line-height:1.8;text-wrap:pretty;margin-bottom:1.2rem}
+.pcard .meta{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:flex;justify-content:space-between}
+.pcard .meta .open-hint{color:var(--text);transition:color .2s}
+.pcard:hover .meta .open-hint{color:var(--red)}
+.pcard.foothold{--glow:var(--green)}
+.pcard.foothold .tag{color:var(--green)}
+.pcard.foothold:hover .meta .open-hint{color:var(--green)}
+.more-line{margin-top:2rem;font-size:.72rem;color:var(--faint);letter-spacing:.05em}
+.more-line a{color:var(--muted)}
+
+dialog.px{
+  margin:auto;width:min(680px, 92vw);max-height:84vh;overflow-y:auto;
+  background:oklch(20% 0.015 20 / 88%);color:var(--text);
+  border:1px solid var(--hairline);border-radius:20px;padding:2.2rem;
+  box-shadow:inset 0 1px 0 oklch(100% 0 0 / 11%), 0 40px 100px oklch(0% 0 0 / 60%);
+  backdrop-filter:blur(28px) saturate(1.2);font-family:var(--mono);
+  opacity:1;scale:1;transition:opacity .3s ease, scale .3s cubic-bezier(.2,.7,.2,1), display .3s allow-discrete, overlay .3s allow-discrete;
+}
+@starting-style{dialog.px[open]{opacity:0;scale:.94}}
+dialog.px::backdrop{background:oklch(0% 0 0 / 55%);backdrop-filter:blur(6px)}
+dialog.px .tag{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:.9rem}
+dialog.px.foothold .tag{color:var(--green)}
+dialog.px h3{font-size:1.4rem;font-weight:600;margin-bottom:1rem}
+dialog.px p{font-size:.92rem;color:var(--muted);line-height:1.9;margin-bottom:1.1rem}
+dialog.px ul{list-style:none;margin-bottom:1.3rem}
+dialog.px li{font-size:.88rem;color:var(--muted);line-height:1.85;padding-left:1.2rem;position:relative}
+dialog.px img.shot{
+  display:block;width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;
+  border:1px solid var(--hairline);border-radius:12px;margin-bottom:1.4rem;
+  background:oklch(0% 0 0 / 30%);
+}
+.px-foot .btn-ghost{font-size:.7rem;padding:.7rem 1.2rem}
+dialog.px li::before{content:"▸";position:absolute;left:0;color:var(--red)}
+dialog.px.foothold li::before{color:var(--green)}
+dialog.px pre{
+  font-size:.68rem;line-height:1.8;color:var(--muted);
+  background:oklch(0% 0 0 / 35%);border:1px solid var(--hairline);border-radius:10px;
+  padding:1rem 1.1rem;overflow-x:auto;margin-bottom:1.3rem;
+}
+dialog.px pre b{color:var(--red);font-weight:500}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.chips span{font-size:.62rem;color:var(--muted);border:1px solid var(--hairline);background:oklch(100% 0 0 / 4%);padding:.34rem .7rem;border-radius:999px}
+.px-foot{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.px-close{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);background:none;border:1px solid var(--hairline);border-radius:999px;
+  padding:.55rem 1.1rem;cursor:pointer;transition:all .2s;
+}
+.px-close:hover{color:var(--red);border-color:var(--red)}
+
+/* ================= CONTACT ================= */
+.contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(2.5rem,5vw,4.5rem);align-items:start}
+.contact-grid .lead{font-size:.92rem;color:var(--muted);line-height:1.9;margin-bottom:2rem;text-wrap:pretty}
+.clink{
+  display:flex;align-items:center;gap:1rem;padding:.85rem 1.05rem;border-radius:12px;
+  text-decoration:none;color:var(--text);margin-bottom:.7rem;
+  border:1px solid transparent;transition:border-color .2s, background .2s;
+}
+.clink:hover{border-color:var(--hairline);background:oklch(100% 0 0 / 4%)}
+.clink .ci{
+  width:38px;height:38px;display:grid;place-items:center;border-radius:10px;flex-shrink:0;
+  border:1px solid var(--hairline);background:oklch(100% 0 0 / 4%);
+  font-size:.72rem;color:var(--red);
+}
+.clink .ct{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);display:block}
+.clink .cv{font-size:.88rem;color:var(--text)}
+.cform{padding:2rem;border-radius:16px}
+.cform .note{font-size:.72rem;color:var(--faint);margin-bottom:1.5rem;line-height:1.7}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.f-group{margin-bottom:1.1rem}
+.f-group label{display:block;font-size:.74rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text);margin-bottom:.5rem}
+.f-group input,.f-group textarea{
+  width:100%;background:oklch(0% 0 0 / 35%);border:1px solid var(--hairline);border-radius:10px;
+  color:var(--text);font:inherit;font-size:.94rem;padding:.85rem 1rem;outline:none;
+  transition:border-color .2s;
+}
+.f-group ::placeholder{color:var(--faint)}
+.f-group input:focus,.f-group textarea:focus{border-color:oklch(from var(--red) l c h / 60%)}
+.f-group textarea{min-height:120px;resize:vertical;field-sizing:content;max-height:40vh}
+.f-sent{display:none;font-size:.8rem;color:var(--text);border:1px solid var(--hairline);border-radius:10px;padding:.9rem 1rem;margin-top:1rem;background:var(--red-dim)}
+
+/* ================= FOOTER ================= */
+footer{padding:2.2rem 0 2.6rem;border-top:1px solid var(--hairline)}
+footer .frow{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.66rem;letter-spacing:.08em;color:var(--faint)}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--red)}
+
+/* ================= REVEAL ================= */
+@media (prefers-reduced-motion: no-preference){
+  .rv{opacity:0;translate:0 20px;animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards}
+  .rv.d1{animation-delay:.07s}.rv.d2{animation-delay:.14s}.rv.d3{animation-delay:.21s}.rv.d4{animation-delay:.3s}
+  @keyframes rise{to{opacity:1;translate:0 0}}
+  .srv{opacity:0;translate:0 28px;animation:rise .85s cubic-bezier(.2,.7,.2,1) both;animation-timeline:view();animation-range:entry 0% entry 35%}
+}
+
+/* ================= RESPONSIVE ================= */
+@media (width <= 900px){
+  .hero-inner,.about-grid,.contact-grid{grid-template-columns:1fr}
+  .hero-photo{order:-1;justify-self:center;max-width:340px}
+  .cert-row{grid-template-columns:1fr 1fr}
+  .cap-grid{grid-template-columns:1fr}
+  .proj-grid{grid-template-columns:1fr}
+  .f-row{grid-template-columns:1fr}
+  .cn-cards{grid-template-columns:1fr;overflow-y:auto}
+  .cn-cta{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div class="scrim"></div>
+
+<!-- ════════ CARD NAV ════════ -->
+<div class="card-nav-wrap">
+  <nav class="card-nav glass" id="cardNav" aria-label="Main">
+    <div class="cn-top">
+      <button class="cn-burger" id="cnBurger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+      <a class="cn-logo" href="#hero">Devonte<b>.</b></a>
+      <a class="btn btn-primary cn-cta" href="#contact">Hire me</a>
+    </div>
+    <div class="cn-cards" aria-hidden="true">
+      <div class="cn-card">
+        <div class="cn-label">Work</div>
+        <a href="#projects">Projects</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#terminal">Terminal</a>
+      </div>
+      <div class="cn-card">
+        <div class="cn-label">About</div>
+        <a href="#about">Who I am</a>
+        <a href="#certs">Certifications</a>
+        <a href="resume.html">Resume</a>
+      </div>
+      <div class="cn-card">
+        <div class="cn-label">Contact</div>
+        <a href="#contact">Contact form</a>
+        <a href="mailto:DevonteHuckleberry@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/devonte-huckleberry-10197a215/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<!-- ════════ HERO ════════ -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow rv d1">Hello, I'm</div>
+        <h1 class="rv d2">Devonte<br><em>Huckleberry</em></h1>
+        <div class="role rv d2">Security · Identity · IT Operations</div>
+        <p class="hero-desc rv d3">Ten-plus years of hands-on IT, a physical-security background, and formal training through Per Scholas Chicago. I read logs in <strong>Splunk</strong>, manage identities in <strong>Active Directory</strong>, write SQL against real datasets, and document incidents in reports people actually use. All of it is proven below: a self-built enterprise lab, four certifications earned or in progress, and one real incident worked end to end.</p>
+        <div class="btns rv d4">
+          <a class="btn btn-primary" href="#projects">View my work</a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+        <div class="btns row2 rv d4">
+          <a class="btn btn-ghost btn-sm down" href="#about">Read more</a>
+          <a class="btn btn-ghost btn-sm" href="resume.html">View resume</a>
+        </div>
+        <div class="stats rv d4">
+          <div class="stat"><div class="num">2</div><div class="lbl">Certs earned</div></div>
+          <div class="stat-rule"></div>
+          <div class="stat"><div class="num">1</div><div class="lbl">Real incident worked</div></div>
+          <div class="stat-rule"></div>
+          <div class="stat"><div class="num">10<b>+</b></div><div class="lbl">Yrs hands-on IT</div></div>
+        </div>
+      </div>
+      <div class="hero-photo rv d3">
+        <div class="corner tl"></div>
+        <div class="corner br"></div>
+        <div class="frame glass glow">
+          <img src="devonte.jpg" alt="Devonte Huckleberry">
+        </div>
+        <a class="open-chip glass" href="#contact">Open to work · Chicago + remote</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CERTS STRIP ════════ -->
+<section id="certs">
+  <div class="wrap">
+    <div class="cert-row">
+      <div class="cert glass glow srv">
+        <div class="c-issuer">Google / Coursera</div>
+        <div class="c-name">Cybersecurity Professional Certificate</div>
+        <div class="c-state">Earned</div>
+      </div>
+      <div class="cert glass glow srv">
+        <div class="c-issuer">ISC²</div>
+        <div class="c-name">Certified in Cybersecurity (CC)</div>
+        <div class="c-state">Earned</div>
+      </div>
+      <div class="cert glass glow srv">
+        <div class="c-issuer">CompTIA · Per Scholas</div>
+        <div class="c-name">Security+ (SY0-701)</div>
+        <div class="c-state">In progress</div>
+      </div>
+      <div class="cert glass glow srv">
+        <div class="c-issuer">Splunk · Per Scholas</div>
+        <div class="c-name">Core Certified User</div>
+        <div class="c-state">In progress</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ ABOUT ════════ -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="srv">
+        <div class="eyebrow">About me</div>
+        <h2 class="stitle">Background &amp; <b>direction</b></h2>
+        <p>Before cybersecurity, I spent years in physical security and client-facing operations: watching access points, documenting incident patterns, escalating threats, and writing reports teams actually used. That background transfers directly to security and IT work. The perimeter is different; the principles aren't.</p>
+        <p>The formal transition started with the <strong>Google Cybersecurity Certificate</strong>, then the <strong>ISC² CC</strong>. I'm currently in Per Scholas Chicago's cybersecurity cohort working toward Security+ and Splunk Core Certified User. My home lab runs a full Active Directory domain, Kali Linux, and Splunk, which is where most of the portfolio projects below came from.</p>
+        <p>The long-term path leads into <strong>Identity &amp; Access Management</strong>: least-privilege design, access reviews, RBAC, and identity governance, where the habit of writing clear records pays off directly. I'm also tracking GRC and AI-compliance frameworks (NIST AI RMF, the EU AI Act, ISO 42001) because access governance doesn't exist in a vacuum.</p>
+        <div class="about-btns">
+          <a class="btn btn-primary" href="#projects">See the work</a>
+          <a class="btn btn-ghost" href="resume.html">View resume</a>
+        </div>
+      </div>
+      <div class="path-panel glass glow srv">
+        <div class="ph">Career path</div>
+        <div><span class="r">✓</span> IT Support / Help Desk</div>
+        <div class="ind1">└─ <span class="r">→</span> <span class="t">SOC Analyst</span> <span class="tgt">target</span></div>
+        <div class="ind2">└─ Senior SOC Analyst</div>
+        <div class="ind3">└─ <span class="t">IAM Analyst</span></div>
+        <div class="ind4">└─ <span class="t">IAM Engineer</span> / Identity Governance</div>
+        <div class="ind4"><span class="r">·</span> GRC &amp; AI compliance — secondary track</div>
+        <div class="ph"># active certs</div>
+        <div><span class="w">~</span> CompTIA Security+</div>
+        <div><span class="w">~</span> Splunk Core Certified User</div>
+        <div class="ph"># frameworks tracking</div>
+        <div>· NIST AI RMF</div>
+        <div>· EU AI Act | ISO 42001</div>
+        <div class="ph"># platforms</div>
+        <div>· <a href="https://tryhackme.com/p/Devonte" target="_blank" rel="noopener">TryHackMe</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CAPABILITIES ════════ -->
+<section id="capabilities">
+  <div class="wrap">
+    <div class="eyebrow srv">What I do</div>
+    <h2 class="stitle srv">Security <b>capabilities</b></h2>
+    <p class="ssub srv">Hands-on skills built through labs, coursework, and real-world incident response. These aren't buzzwords. Each one maps to actual project work in this portfolio.</p>
+    <div class="cap-grid">
+      <div class="cap glass glow srv">
+        <div class="n">01</div>
+        <h3>Threat Detection &amp; Log Analysis</h3>
+        <p>Reading log data for attack patterns, correlating SIEM alerts, tracing events across a timeline. The Splunk and packet-capture work backing this is in the portfolio.</p>
+      </div>
+      <div class="cap glass glow srv">
+        <div class="n">02</div>
+        <h3>Network Traffic Analysis</h3>
+        <p>Live packet capture and protocol-level analysis using Wireshark and tshark. Applied in a real-world domain hijack investigation with QUIC/TLS handshake tracing.</p>
+      </div>
+      <div class="cap glass glow srv">
+        <div class="n">03</div>
+        <h3>Incident Response</h3>
+        <p>Incident documentation built around the NIST framework: 6-phase planning, clear timelines, and a handler's journal I actually maintain. One of the entries is from a live incident.</p>
+      </div>
+      <div class="cap glass glow srv">
+        <div class="n">04</div>
+        <h3>Vulnerability Assessment</h3>
+        <p>Formal vulnerability assessment using NIST SP 800-30 and Nmap: threat scoring, prioritized remediation, and reports that decision-makers can act on without a decoder ring.</p>
+      </div>
+      <div class="cap glass glow srv">
+        <div class="n">05</div>
+        <h3>SQL &amp; Data Querying</h3>
+        <p>Writing precise SQL queries against login logs and employee records to surface what the security team actually needs: failed after-hours attempts, geographic outliers, department-specific machine subsets.</p>
+      </div>
+      <div class="cap glass glow srv">
+        <div class="n">06</div>
+        <h3>IAM &amp; Access Governance</h3>
+        <p>Least-privilege design, RBAC, and access reviews. The direction I'm deliberately building toward, with framework-aligned risk work sitting behind it on the GRC side.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PROJECTS ════════ -->
+<section id="projects">
+  <div class="wrap">
+    <div class="eyebrow srv">Proof</div>
+    <h2 class="stitle srv">Projects</h2>
+    <p class="ssub srv">Real incidents and labs I built to prove I can do the job. Click a card for the full story.</p>
+
+    <div class="proj-grid">
+      <button class="pcard glass glow srv" data-dialog="px-adlab">
+        <div class="tag">Flagship · Purple team</div>
+        <h3>Active Directory Purple-Team &amp; SOC Lab</h3>
+        <p>A mini-enterprise on a spare laptop. I stand up an AD domain, Kerberoast it from Kali, then catch the attack in Splunk and write the detection.</p>
+        <div class="meta"><span>AD · Splunk · Sysmon · Kali</span><span class="open-hint">Expand +</span></div>
+      </button>
+
+      <button class="pcard glass glow srv" data-dialog="px-hijack">
+        <div class="tag">Live incident</div>
+        <h3>Website Hijack &amp; Malicious Redirect Investigation</h3>
+        <p>An active CDN account takeover serving a fraudulent gambling platform under a live church domain. I ran the packet capture, traced it to a Cloudflare config compromise, and wrote the incident report. Not a lab.</p>
+        <div class="meta"><span>Wireshark · tshark · VirusTotal</span><span class="open-hint">Expand +</span></div>
+      </button>
+
+      <button class="pcard glass glow srv" data-dialog="px-msf">
+        <div class="tag">Lab · Offense</div>
+        <h3>Metasploitable 2 — vsftpd Backdoor</h3>
+        <p>Root access in about 15 minutes via the vsftpd 2.3.4 backdoor (CVE-2011-2523), then a documented enumeration-to-exploitation write-up of the full path.</p>
+        <div class="meta"><span>Kali · Metasploit · Nmap</span><span class="open-hint">Expand +</span></div>
+      </button>
+
+      <button class="pcard foothold glass glow srv" data-dialog="px-foothold">
+        <div class="tag">Founder · Product</div>
+        <h3>Foothold</h3>
+        <p>I built Foothold for career changers like me: study, get your first cert, land the job. Different brand, same builder.</p>
+        <div class="meta"><span>foothold.sh</span><span class="open-hint">Expand +</span></div>
+      </button>
+    </div>
+
+    <p class="more-line srv">Also on file: <a href="../projects/sql-investigation.html">SQL investigation queries</a> · <a href="../projects/vulnerability-assessment.html">vulnerability assessment</a> · <a href="../projects/incident-journal.html">incident handler's journal</a></p>
+  </div>
+</section>
+
+<!-- ════════ TERMINAL ════════ -->
+<section id="terminal">
+  <div class="wrap">
+    <div class="eyebrow srv">Extra credit</div>
+    <h2 class="stitle srv">Prefer a command line? <b>Ask away.</b></h2>
+    <p class="ssub srv">Everything on this page, queryable. Type <code>help</code> to see the commands.</p>
+    <div class="term-window glass glow srv">
+      <div class="term-head"><i></i><i></i><i></i><div class="t-title">devonte@portfolio</div></div>
+      <div class="term-body" id="termBody">
+        <div><span class="p">devonte@portfolio</span>:~$ <span>whoami</span></div>
+        <div class="out">Devonte Huckleberry — security · identity · IT operations. Chicago + remote.</div>
+        <div class="term-line"><span class="p">devonte@portfolio</span>:~$&nbsp;<input id="termInput" autocomplete="off" spellcheck="false" aria-label="Terminal input"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CONTACT ════════ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="eyebrow srv">Contact</div>
+    <h2 class="stitle srv">Get in <b>touch</b></h2>
+    <p class="ssub srv">Hiring for security, identity, IT support, or anything adjacent? I answer fast, and I show up prepared.</p>
+    <div class="contact-grid">
+      <div class="srv">
+        <a class="clink glass" href="mailto:DevonteHuckleberry@gmail.com">
+          <span class="ci">@</span>
+          <span><span class="ct">Email</span><span class="cv">DevonteHuckleberry@gmail.com</span></span>
+        </a>
+        <a class="clink glass" href="https://www.linkedin.com/in/devonte-huckleberry-10197a215/" target="_blank" rel="noopener">
+          <span class="ci">in</span>
+          <span><span class="ct">LinkedIn</span><span class="cv">devonte-huckleberry</span></span>
+        </a>
+        <a class="clink glass" href="https://www.credly.com/users/devonte-huckleberry" target="_blank" rel="noopener">
+          <span class="ci">✓</span>
+          <span><span class="ct">Credly</span><span class="cv">Verified badges</span></span>
+        </a>
+        <a class="clink glass" href="https://tryhackme.com/p/Devonte" target="_blank" rel="noopener">
+          <span class="ci">THM</span>
+          <span><span class="ct">TryHackMe</span><span class="cv">Profile</span></span>
+        </a>
+        <a class="clink glass" href="../Devonte_Huckleberry_Resume.pdf" download>
+          <span class="ci">↓</span>
+          <span><span class="ct">Resume</span><span class="cv">Download PDF</span></span>
+        </a>
+      </div>
+      <form class="cform glass glow srv" id="contactForm">
+        <div class="note">Prototype mock. The real site keeps the current Formspree + honeypot + reCAPTCHA wiring.</div>
+        <div class="f-row">
+          <div class="f-group"><label for="fn">First name</label><input id="fn" type="text" placeholder="John"></div>
+          <div class="f-group"><label for="ln">Last name</label><input id="ln" type="text" placeholder="Doe"></div>
+        </div>
+        <div class="f-group"><label for="em">Email</label><input id="em" type="email" placeholder="you@company.com" required></div>
+        <div class="f-group"><label for="msg">Message</label><textarea id="msg" placeholder="What's on your mind?" required></textarea></div>
+        <button class="btn btn-primary" type="submit">Send message</button>
+        <div class="f-sent" id="fSent">Message received. I'll get back to you soon. (Prototype: nothing was actually sent.)</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="frow">
+      <span>© 2026 Devonte Huckleberry · Chicago, IL</span>
+      <span><a href="#hero">Top ↑</a> · <a href="resume.html">Resume</a> · <a href="mailto:DevonteHuckleberry@gmail.com">Email</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════ EXPANDED CARDS ════════ -->
+<dialog class="px" id="px-adlab">
+  <div class="tag">Flagship · Purple team</div>
+  <h3>Active Directory Purple-Team &amp; SOC Lab</h3>
+  <img class="shot" src="previews/adlab.png" alt="Active Directory Users and Computers — the lab's OU tree and user accounts">
+  <p>A self-built mini-enterprise: a Windows Server 2022 domain controller and a domain-joined workstation on a spare laptop, attacked from a Kali VM on an Apple Silicon Mac. One lab, three skill areas I'm targeting for work: identity, detection, offense. Phase 1 is done and documented with 8 evidence screenshots.</p>
+  <ul>
+    <li>Built and administered the domain: OUs, users, groups, Group Policy, least-privilege design</li>
+    <li>Generated endpoint telemetry with Sysmon, centralized it in Splunk</li>
+    <li>Ran Kerberoasting and a password spray end to end, then wrote the Splunk detections for both</li>
+    <li>Segmented the lab network on its own isolated subnet</li>
+  </ul>
+  <div class="chips"><span>Active Directory</span><span>Splunk</span><span>Sysmon</span><span>Kerberoasting</span><span>Kali</span><span>Group Policy</span></div>
+  <div class="px-foot">
+    <a class="btn btn-primary" href="adlab.html">Read the full build</a>
+    <button class="px-close">Close · Esc</button>
+  </div>
+</dialog>
+
+<dialog class="px" id="px-hijack">
+  <div class="tag">Live incident · May 21, 2026</div>
+  <h3>Website Hijack &amp; Malicious Redirect — ssumcchicago.org</h3>
+  <img class="shot" src="previews/hijack.png" alt="The full incident write-up page for the ssumcchicago.org hijack">
+  <p>An active CDN account takeover serving a fraudulent gambling platform under a live church domain. I ran packet capture, traced the attack to a Cloudflare config-level compromise, identified the indicators of compromise, and produced a full incident report with remediation steps. This is the one project here that wasn't practice.</p>
+  <ul>
+    <li>Packet capture and QUIC/TLS handshake tracing with Wireshark and tshark</li>
+    <li>IOC identification and verification through VirusTotal and DNS analysis</li>
+    <li>Full evidence package: timeline, captures, and analysis, end to end</li>
+  </ul>
+  <div class="chips"><span>Wireshark</span><span>tshark</span><span>VirusTotal</span><span>DNS analysis</span><span>QUIC/TLS</span><span>Incident response</span></div>
+  <div class="px-foot">
+    <span style="display:flex;gap:.7rem;flex-wrap:wrap">
+      <a class="btn btn-primary" href="../projects/hijack-investigation.html">Read the write-up</a>
+      <a class="btn btn-ghost" href="https://drive.google.com/drive/folders/1MiCHnl7v4U2SJ9kMAKGCCMRF7Dn_PV7R?usp=drive_link" target="_blank" rel="noopener">Evidence (Drive)</a>
+    </span>
+    <button class="px-close">Close · Esc</button>
+  </div>
+</dialog>
+
+<dialog class="px" id="px-msf">
+  <div class="tag">Lab · Offense</div>
+  <h3>Metasploitable 2 — vsftpd 2.3.4 Backdoor Exploit</h3>
+  <img class="shot" src="previews/msf.png" alt="The Metasploitable 2 lab write-up page">
+  <p>Gained full root access in about 15 minutes by exploiting the vsftpd 2.3.4 backdoor (CVE-2011-2523), confirming an interactive reverse shell on an isolated lab target. Then documented the complete enumeration-to-exploitation path across a deliberate 4-hour session.</p>
+  <ul>
+    <li>Ping sweep, Nmap service enumeration, and version detection against the target VM</li>
+    <li>Backdoor identification and manual verification before touching Metasploit</li>
+    <li>Exploitation, post-exploitation enumeration, and a write-up I'd want to read in a pentest report</li>
+  </ul>
+  <div class="chips"><span>Kali Linux</span><span>Nmap</span><span>Metasploit</span><span>CVE-2011-2523</span></div>
+  <div class="px-foot">
+    <a class="btn btn-primary" href="../projects/metasploitable-lab.html">Read the lab write-up</a>
+    <button class="px-close">Close · Esc</button>
+  </div>
+</dialog>
+
+<dialog class="px foothold" id="px-foothold">
+  <div class="tag">Founder · Product · Live</div>
+  <h3>Foothold — foothold.sh</h3>
+  <img class="shot" src="previews/foothold.png" alt="foothold.sh — Your first step into cyber">
+  <p>I changed careers without a map, so I'm building one. Foothold helps career changers do what I did: study for their first cert, pass it, and land their first job in tech. Security+ study tools, resume and interview prep, built by someone actually walking the path.</p>
+  <ul>
+    <li>Security+ study tools you can use the day you sign up</li>
+    <li>Resume, LinkedIn, and interview prep aimed at first tech jobs</li>
+    <li>Live now at foothold.sh</li>
+  </ul>
+  <div class="chips"><span>Career changers</span><span>Security+ study</span><span>Job prep</span></div>
+  <div class="px-foot">
+    <a class="btn btn-primary" href="https://foothold.sh" target="_blank" rel="noopener">Visit foothold.sh</a>
+    <button class="px-close">Close · Esc</button>
+  </div>
+</dialog>
+
+<script type="module">
+import { initColorBends } from './colorbends.js';
+
+/* ---------- background ---------- */
+initColorBends(document.getElementById('bg'), {
+  colors: ['#FF4D5A', '#C1121F', '#4A0E14'], rotation: 45, autoRotate: 4, speed: 0.18,
+  scale: 1.4, warpStrength: 1, mouseInfluence: 0.6, parallax: 0.5,
+  noise: 0.07, intensity: 1.15, bandWidth: 6, transparent: true
+});
+
+/* ---------- card nav ---------- */
+const nav = document.getElementById('cardNav');
+const burger = document.getElementById('cnBurger');
+const cnCards = nav.querySelector('.cn-cards');
+burger.addEventListener('click', () => {
+  const open = !nav.classList.contains('open');
+  if (open) {
+    const isMobile = matchMedia('(max-width: 900px)').matches;
+    const h = isMobile ? Math.min(innerHeight * 0.8, 60 + cnCards.scrollHeight + 14) : 290;
+    nav.style.setProperty('--nav-h', h + 'px');
+  }
+  nav.classList.toggle('open', open);
+  burger.setAttribute('aria-expanded', open);
+  cnCards.setAttribute('aria-hidden', !open);
+});
+nav.querySelectorAll('.cn-card a').forEach(a => a.addEventListener('click', () => {
+  nav.classList.remove('open');
+  burger.setAttribute('aria-expanded', 'false');
+}));
+
+/* ---------- conic glow tracking ---------- */
+document.querySelectorAll('.glow').forEach(el => {
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+    el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+});
+
+/* ---------- expandable cards ---------- */
+document.querySelectorAll('.pcard[data-dialog]').forEach(card => {
+  card.addEventListener('click', () => document.getElementById(card.dataset.dialog).showModal());
+});
+document.querySelectorAll('dialog.px').forEach(dlg => {
+  dlg.querySelector('.px-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+});
+
+/* ---------- contact form (prototype) ---------- */
+const cf = document.getElementById('contactForm');
+cf.addEventListener('submit', e => {
+  e.preventDefault();
+  document.getElementById('fSent').style.display = 'block';
+});
+
+/* ---------- terminal ---------- */
+const termBody = document.getElementById('termBody');
+const termInput = document.getElementById('termInput');
+const CMDS = {
+  help: `commands: whoami · projects · certs · contact · clear
+try one. nothing here phones home.`,
+  whoami: `Devonte Huckleberry — security · identity · IT operations. Chicago + remote.
+10+ years hands-on IT. Physical security before that. Per Scholas Chicago now.`,
+  projects: `[1] Active Directory Purple-Team & SOC Lab   (flagship)
+[2] Website Hijack & Malicious Redirect      (live incident)
+[3] Metasploitable 2 — vsftpd backdoor       (offense lab)
+[4] Foothold — foothold.sh                   (product, live)
+plus SQL queries, a vulnerability assessment, and an
+incident handler's journal. scroll up — cards expand.`,
+  certs: `earned:      Google Cybersecurity Professional · ISC² CC
+in progress: CompTIA Security+ (SY0-701) · Splunk Core Certified User`,
+  contact: `email:    DevonteHuckleberry@gmail.com
+linkedin: linkedin.com/in/devonte-huckleberry-10197a215
+or use the form below this terminal.`,
+  sudo: `nice try. permission denied.`,
+  clear: null
+};
+termInput.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const raw = termInput.value.trim();
+  const cmd = raw.toLowerCase().split(/\s+/)[0];
+  termInput.value = '';
+  if (!raw) return;
+  if (cmd === 'clear') {
+    termBody.querySelectorAll(':scope > div:not(.term-line)').forEach(n => n.remove());
+    return;
+  }
+  const echo = document.createElement('div');
+  echo.innerHTML = `<span class="p">devonte@portfolio</span>:~$ ${raw.replace(/</g, '&lt;')}`;
+  const out = document.createElement('div');
+  out.className = 'out';
+  out.textContent = CMDS[cmd] ?? `${cmd}: command not found — try 'help'`;
+  const line = termBody.querySelector('.term-line');
+  termBody.insertBefore(echo, line);
+  termBody.insertBefore(out, line);
+  termBody.scrollTop = termBody.scrollHeight;
+});
+termBody.addEventListener('click', () => termInput.focus());
+</script>
+</body>
+</html>

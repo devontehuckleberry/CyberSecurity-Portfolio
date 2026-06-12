@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active Directory Purple-Team &amp; SOC Lab — Devonte Huckleberry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: oklch(16% 0.012 20);
+  --text: oklch(95% 0.004 30);
+  --muted: oklch(82% 0.008 30);
+  --faint: oklch(67% 0.01 30);
+  --red: oklch(62% 0.21 22);
+  --red-deep: oklch(44% 0.17 24);
+  --hairline: oklch(100% 0 0 / 11%);
+  --glass-fill: oklch(100% 0 0 / 5%);
+  --chamfer: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:
+    radial-gradient(ellipse 80% 50% at 70% -10%, oklch(30% 0.1 24 / 60%), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 10% 110%, oklch(24% 0.08 28 / 50%), transparent 70%),
+    var(--bg);
+  color:var(--text);font-family:"IBM Plex Mono",monospace;
+  -webkit-font-smoothing:antialiased;padding-block:6.5rem 5rem;
+}
+.glass{
+  background:var(--glass-fill);border:1px solid var(--hairline);border-radius:16px;
+  box-shadow:inset 0 1px 0 oklch(100% 0 0 / 11%), 0 20px 50px oklch(0% 0 0 / 38%);
+  backdrop-filter:blur(20px);
+}
+.topbar{
+  position:fixed;top:1.1rem;left:50%;translate:-50% 0;z-index:50;
+  width:min(920px, 92vw);height:58px;border-radius:16px;
+  display:flex;align-items:center;justify-content:space-between;padding-inline:1.1rem;
+}
+.topbar a{font-size:.78rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.topbar a:hover{color:var(--red)}
+.sheet{width:min(920px, 92vw);margin-inline:auto;padding:clamp(1.8rem, 5vw, 3rem)}
+.tag{font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:1rem}
+h1{font-size:clamp(1.6rem, 3.6vw, 2.3rem);font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-bottom:1.2rem;text-wrap:balance}
+.lead{font-size:.96rem;color:var(--muted);line-height:1.95;margin-bottom:1.2rem;max-width:72ch;text-wrap:pretty}
+.lead strong{color:var(--text)}
+h2{font-size:.74rem;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--red);margin:2.6rem 0 1.2rem;display:flex;align-items:center;gap:.9rem}
+h2::after{content:"";flex:1;height:1px;background:var(--hairline)}
+table{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:1.4rem}
+th,td{text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--hairline);color:var(--muted)}
+th{color:var(--text);font-weight:600;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+td code,.lead code{color:var(--red);font-size:.95em}
+ul{list-style:none;margin-bottom:1.2rem}
+li{font-size:.9rem;color:var(--muted);line-height:1.9;padding-left:1.2rem;position:relative;margin-bottom:.3rem}
+li::before{content:"▸";position:absolute;left:0;color:var(--red)}
+.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.ev{border:1px solid var(--hairline);border-radius:12px;overflow:hidden;background:oklch(0% 0 0 / 25%)}
+.ev img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top left}
+.ev .cap{font-size:.68rem;color:var(--faint);padding:.65rem .85rem;line-height:1.6;border-top:1px solid var(--hairline)}
+.note{font-size:.74rem;color:var(--faint);line-height:1.8;margin-top:2.4rem;border-top:1px solid var(--hairline);padding-top:1.4rem}
+@media (width <= 640px){.evidence-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar glass">
+  <a href="after2.html#projects">← back to projects</a>
+  <a href="../projects/active-directory-purple-lab/README.md">Full build guide (README)</a>
+</div>
+
+<main class="sheet glass">
+  <div class="tag">Flagship · Purple team · Phase 1 complete</div>
+  <h1>Active Directory Purple-Team &amp; SOC Lab</h1>
+  <p class="lead">A self-built mini-enterprise running on a spare Windows laptop and an Apple Silicon Mac. I stand up an Active Directory domain, attack it from Kali, then catch the attack in Splunk. One lab, three skill areas I'm targeting for work: <strong>identity (IAM)</strong>, <strong>detection (SOC)</strong>, and <strong>offensive technique (purple team)</strong>.</p>
+  <p class="lead">Maps to Security+ SY0-701 domains: access control and identity, attacks and indicators, and security operations and monitoring.</p>
+
+  <h2>Architecture</h2>
+  <table>
+    <tr><th>VM</th><th>Role</th><th>IP</th></tr>
+    <tr><td><code>DC01</code> — Windows Server 2022</td><td>Domain Controller, DNS for <code>lab.local</code>, Sysmon</td><td><code>10.10.10.10</code></td></tr>
+    <tr><td><code>WS01</code> — Windows 10/11</td><td>Domain-joined workstation, Sysmon, Splunk (SOC console)</td><td><code>10.10.10.30</code></td></tr>
+    <tr><td><code>KALI</code> — Kali Linux (UTM, Mac)</td><td>Attacker, only reachable during exercises</td><td><code>10.10.10.20</code></td></tr>
+  </table>
+  <ul>
+    <li>Domain traffic rides a sealed VirtualBox internal network; the bridged adapter stays disabled except during attack exercises</li>
+    <li>SOC capability comes from Sysmon + Splunk Free inside the existing VMs — no extra SIEM VM needed on 16 GB of RAM</li>
+    <li>Safety rule: credential and protocol attacks against my own VMs only; no live malware or real C2 on home topology</li>
+  </ul>
+
+  <h2>Phase 1 — Identity: stand up the domain (done)</h2>
+  <ul>
+    <li>Promoted <code>DC01</code> to Domain Controller for a new forest, <code>lab.local</code></li>
+    <li>Built the OU tree (<code>Corp</code> → Users, Workstations, ServiceAccounts) with users and groups: IT-Admins, Helpdesk, Finance</li>
+    <li>Linked a logon-banner GPO to feel the IAM workflow end to end</li>
+    <li>Planted the attack surface for Phase 3: a service account with an SPN and a deliberately weak password — the Kerberoasting target</li>
+  </ul>
+
+  <h2>Evidence — Phase 1</h2>
+  <div class="evidence-grid">
+    <div class="ev"><img src="../projects/active-directory-purple-lab/evidence/01-aduc-ou-tree-users.png" alt="ADUC OU tree and users"><div class="cap">01 · Active Directory Users &amp; Computers — OU tree and user accounts</div></div>
+    <div class="ev"><img src="../projects/active-directory-purple-lab/evidence/02-server-manager-roles.png" alt="Server Manager roles"><div class="cap">02 · Server Manager — AD DS and DNS roles installed on DC01</div></div>
+    <div class="ev"><img src="../projects/active-directory-purple-lab/evidence/03-get-addomain.png" alt="Get-ADDomain output"><div class="cap">03 · PowerShell Get-ADDomain — lab.local forest confirmed</div></div>
+    <div class="ev"><img src="../projects/active-directory-purple-lab/evidence/04-svc_sql-spn-and-ipconfig.png" alt="Service account SPN"><div class="cap">04 · svc_sql service account with SPN set — the planted Kerberoast target</div></div>
+    <div class="ev"><img src="../projects/active-directory-purple-lab/evidence/05-it-admins-membership.png" alt="IT-Admins group"><div class="cap">05 · IT-Admins group membership</div></div>
+    <div class="ev"><img src="../projects/active-directory-purple-lab/evidence/06-helpdesk-membership.png" alt="Helpdesk group"><div class="cap">06 · Helpdesk group membership</div></div>
+    <div class="ev"><img src="../projects/active-directory-purple-lab/evidence/07-finance-membership.png" alt="Finance group"><div class="cap">07 · Finance group membership</div></div>
+    <div class="ev"><img src="../projects/active-directory-purple-lab/evidence/08-logon-banner-gpo.png" alt="Logon banner GPO"><div class="cap">08 · Logon-banner GPO linked and applied</div></div>
+  </div>
+
+  <h2>Next phases</h2>
+  <ul>
+    <li>Phase 2 — Detection: Sysmon on both Windows VMs, telemetry centralized in Splunk</li>
+    <li>Phase 3 — Offense: Kerberoasting and a password spray from Kali, end to end</li>
+    <li>Phase 4 — Purple: write the Splunk detections that catch both attacks, document the fix</li>
+  </ul>
+
+  <div class="note">Prototype page. The real build gets a full case-study page in the same format as the other write-ups, with the complete README content.</div>
+</main>
+
+</body>
+</html>

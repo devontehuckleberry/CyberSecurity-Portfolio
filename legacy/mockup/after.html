@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devonte Huckleberry — Cybersecurity Analyst (AFTER mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<style>
+/* ================= TOKENS ================= */
+:root{
+  --bg: oklch(12% 0.012 20);
+  --bg-deep: oklch(9% 0.01 20);
+  --text: oklch(94% 0.005 30);
+  --muted: oklch(68% 0.012 30);
+  --faint: oklch(48% 0.012 30);
+  --red: oklch(62% 0.21 22);          /* ~#E63946 family */
+  --red-deep: oklch(42% 0.17 24);
+  --red-dim: oklch(from var(--red) l c h / 14%);
+  --green: oklch(80% 0.21 152);       /* Foothold #34E66B — Foothold card ONLY */
+  --hairline: oklch(100% 0 0 / 9%);
+  --glass-fill: oklch(100% 0 0 / 4%);
+  --glass-highlight: inset 0 1px 0 oklch(100% 0 0 / 10%);
+  --display: "Bricolage Grotesque", sans-serif;
+  --mono: "JetBrains Mono", monospace;
+  --glow: var(--red);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--display);
+  font-weight:380;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--red);color:#fff}
+
+/* ================= BACKDROP: abstract gradient mesh ================= */
+.backdrop{position:fixed;inset:0;z-index:-2;background:var(--bg-deep);overflow:hidden}
+.backdrop .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
+.blob.b1{width:62vw;height:62vw;top:-28vw;right:-18vw;background:radial-gradient(circle at 35% 35%, oklch(30% 0.13 24), transparent 65%);animation:drift1 26s ease-in-out infinite alternate}
+.blob.b2{width:48vw;height:48vw;bottom:-20vw;left:-14vw;background:radial-gradient(circle at 60% 40%, oklch(24% 0.10 28), transparent 65%);animation:drift2 32s ease-in-out infinite alternate}
+.blob.b3{width:30vw;height:30vw;top:38%;left:42%;background:radial-gradient(circle, oklch(22% 0.07 350), transparent 70%);animation:drift3 22s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(-8vw,6vh) scale(1.12)}}
+@keyframes drift2{to{transform:translate(6vw,-5vh) scale(1.08)}}
+@keyframes drift3{to{transform:translate(-5vw,-7vh) scale(1.18)}}
+/* faint engineering grid */
+.backdrop::after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(oklch(100% 0 0 / 2.5%) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(100% 0 0 / 2.5%) 1px, transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 0%, #000 30%, transparent 80%);
+}
+/* film grain */
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+}
+
+/* ================= GLASS RECIPE (Foothold surface DNA) ================= */
+.glass{
+  position:relative;
+  background:var(--glass-fill);
+  border:1px solid var(--hairline);
+  border-radius:18px;
+  box-shadow:var(--glass-highlight), 0 24px 60px oklch(0% 0 0 / 42%);
+  backdrop-filter:blur(22px) saturate(1.25);
+  -webkit-backdrop-filter:blur(22px) saturate(1.25);
+}
+/* cursor-tracking conic glow, masked to the hairline */
+.glow{--mx:50%;--my:50%}
+.glow::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+  background:conic-gradient(from 0deg at var(--mx) var(--my),
+    transparent 0deg,
+    oklch(from var(--glow) l c h / 65%) 80deg,
+    transparent 160deg,
+    oklch(from var(--glow) l c h / 35%) 260deg,
+    transparent 340deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  opacity:0;transition:opacity .35s ease;pointer-events:none;
+}
+.glow::after{ /* soft interior wash under the cursor */
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(320px circle at var(--mx) var(--my), oklch(from var(--glow) l c h / 7%), transparent 70%);
+  opacity:0;transition:opacity .35s ease;
+}
+.glow:hover::before,.glow:hover::after{opacity:1}
+
+/* ================= NAV ================= */
+nav{
+  position:fixed;top:1.25rem;left:50%;translate:-50% 0;z-index:50;
+  display:flex;align-items:center;gap:.25rem;
+  padding:.4rem .5rem;border-radius:999px;
+}
+nav a{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;
+  color:var(--muted);text-decoration:none;padding:.5rem .9rem;border-radius:999px;
+  transition:color .2s, background .2s;
+}
+nav a:hover{color:var(--text);background:oklch(100% 0 0 / 6%)}
+nav a.hire{
+  color:#fff;background:linear-gradient(180deg, var(--red), var(--red-deep));
+  box-shadow:inset 0 1px 0 oklch(100% 0 0 / 25%), 0 4px 16px oklch(from var(--red) l c h / 35%);
+}
+nav a.hire:hover{filter:brightness(1.1)}
+
+/* ================= LAYOUT ================= */
+.wrap{max-width:1180px;margin-inline:auto;padding-inline:clamp(1.25rem, 4vw, 3rem)}
+
+/* ================= HERO ================= */
+#hero{min-height:100svh;display:grid;align-items:center;padding-block:7rem 4rem}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.25fr .9fr;   /* asymmetric: copy gets more room */
+  gap:clamp(2.5rem, 6vw, 5.5rem);
+  align-items:center;
+}
+.kicker{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--red);display:flex;align-items:center;gap:.8rem;margin-bottom:1.4rem;
+}
+.kicker::before{content:"";width:36px;height:1px;background:var(--red)}
+h1{
+  font-size:clamp(3rem, 7vw, 5.4rem);
+  font-weight:640;line-height:.98;letter-spacing:-.015em;
+  font-variation-settings:"opsz" 96;
+  text-wrap:balance;margin-bottom:1rem;
+}
+h1 em{font-style:normal;color:var(--red)}
+.role{
+  font-family:var(--mono);font-size:.92rem;color:var(--muted);
+  letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.6rem;
+}
+.hero-desc{
+  font-size:1.02rem;color:var(--muted);line-height:1.85;max-width:54ch;
+  text-wrap:pretty;margin-bottom:2.2rem;
+}
+.hero-desc strong{color:var(--text);font-weight:520}
+.btns{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:2.6rem}
+.btn{
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;text-decoration:none;
+  padding:.85rem 1.5rem;border-radius:12px;transition:all .25s ease;
+}
+.btn-primary{
+  color:#fff;background:linear-gradient(180deg, var(--red), var(--red-deep));
+  box-shadow:inset 0 1px 0 oklch(100% 0 0 / 25%), 0 8px 24px oklch(from var(--red) l c h / 30%);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 oklch(100% 0 0 / 25%), 0 12px 32px oklch(from var(--red) l c h / 45%)}
+.btn-ghost{color:var(--text);border:1px solid var(--hairline);background:var(--glass-fill);backdrop-filter:blur(12px)}
+.btn-ghost:hover{border-color:oklch(from var(--red) l c h / 50%);color:var(--red)}
+.stats{display:flex;gap:2.2rem}
+.stat .num{font-size:1.9rem;font-weight:600;font-variation-settings:"opsz" 60}
+.stat .num span{color:var(--red)}
+.stat .lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-top:.2rem}
+.stat-rule{width:1px;background:var(--hairline)}
+
+/* hero right: photo card + overlapping terminal */
+.hero-right{position:relative}
+.photo-card{padding:.85rem;border-radius:24px}
+.photo-card img{
+  display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;
+  border-radius:14px;filter:saturate(.92) contrast(1.04);
+}
+.status-chip{
+  position:absolute;top:1.6rem;left:-1.1rem;
+  display:flex;align-items:center;gap:.55rem;
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;
+  padding:.6rem .95rem;border-radius:999px;
+}
+.status-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+/* terminal widget — optional, non-blocking, overlaps the photo card */
+.term{
+  position:absolute;bottom:-2.2rem;left:-3.2rem;width:min(330px, 86%);
+  border-radius:14px;padding:1rem 1.1rem 1.1rem;
+  font-family:var(--mono);font-size:.7rem;line-height:1.8;
+}
+.term-bar{display:flex;gap:.4rem;margin-bottom:.7rem}
+.term-bar i{width:9px;height:9px;border-radius:50%;background:oklch(100% 0 0 / 14%)}
+.term-bar i:first-child{background:oklch(from var(--red) l c h / 70%)}
+.term .ln .p{color:var(--red)}
+.term .ln .cmd{color:var(--text)}
+.term .out{color:var(--muted)}
+.term .cursor{display:inline-block;width:7px;height:.95em;background:var(--red);vertical-align:-2px;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.term .hint{margin-top:.5rem;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* ================= PROJECTS SLICE ================= */
+#projects{padding-block:5rem 8rem}
+.sec-head{margin-bottom:3.5rem;display:flex;align-items:end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(2.1rem, 4.4vw, 3.4rem);font-weight:600;letter-spacing:-.01em;line-height:1.05}
+.sec-head h2 em{font-style:normal;color:var(--red)}
+.sec-head p{font-family:var(--mono);font-size:.72rem;color:var(--faint);letter-spacing:.06em;max-width:34ch;text-align:right;line-height:1.9}
+.proj-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(1.5rem, 3vw, 2.5rem);
+  align-items:start;
+}
+.proj-col{display:grid;gap:clamp(1.5rem, 3vw, 2.5rem)}
+.proj-col.offset{margin-top:5.5rem}   /* the rbp stagger */
+.card{display:block;text-decoration:none;color:inherit;padding:1.9rem;border-radius:20px;transition:transform .35s ease}
+.card:hover{transform:translateY(-4px)}
+.card .tag{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--red);display:flex;align-items:center;gap:.6rem;margin-bottom:1.1rem;
+}
+.card .tag::before{content:"";width:6px;height:6px;background:currentColor;rotate:45deg}
+.card h3{font-size:1.35rem;font-weight:580;line-height:1.25;letter-spacing:-.005em;margin-bottom:.8rem;text-wrap:balance}
+.card p{font-size:.9rem;color:var(--muted);line-height:1.8;text-wrap:pretty;margin-bottom:1.4rem}
+.card .meta{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);display:flex;justify-content:space-between;align-items:center}
+.card .meta .go{color:var(--text);transition:color .2s, translate .25s ease}
+.card:hover .meta .go{color:var(--red);translate:4px 0}
+/* flagship card gets more presence */
+.card.flagship{padding:2.4rem}
+.card.flagship h3{font-size:1.7rem}
+.card.flagship .shot{
+  margin:0 0 1.5rem;border-radius:12px;border:1px solid var(--hairline);
+  aspect-ratio:16/8.5;overflow:hidden;position:relative;
+  background:
+    radial-gradient(circle at 80% 15%, oklch(from var(--red) l c h / 18%), transparent 50%),
+    linear-gradient(160deg, oklch(18% 0.03 24), oklch(12% 0.015 20));
+}
+.card.flagship .shot pre{
+  position:absolute;inset:1.1rem;margin:0;font-family:var(--mono);font-size:.62rem;line-height:1.85;
+  color:var(--muted);overflow:hidden;
+}
+.card.flagship .shot pre b{color:var(--red);font-weight:500}
+.card.flagship .shot pre i{font-style:normal;color:var(--text)}
+/* Foothold card: the ONLY place green appears */
+.card.foothold{--glow:var(--green)}
+.card.foothold .tag{color:var(--green)}
+.card.foothold:hover .meta .go{color:var(--green)}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.4rem}
+.chips span{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--muted);
+  border:1px solid var(--hairline);background:oklch(100% 0 0 / 3%);
+  padding:.32rem .65rem;border-radius:999px;
+}
+
+/* ================= LOAD REVEAL ================= */
+@media (prefers-reduced-motion: no-preference){
+  .rv{opacity:0;translate:0 22px;animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards}
+  .rv.d1{animation-delay:.08s}.rv.d2{animation-delay:.16s}.rv.d3{animation-delay:.24s}
+  .rv.d4{animation-delay:.32s}.rv.d5{animation-delay:.45s}
+  @keyframes rise{to{opacity:1;translate:0 0}}
+  .scroll-rv{opacity:0;translate:0 30px;animation:rise .9s cubic-bezier(.2,.7,.2,1) both;animation-timeline:view();animation-range:entry 0% entry 38%}
+}
+
+/* ================= RESPONSIVE ================= */
+@media (width <= 900px){
+  .hero-grid{grid-template-columns:1fr;gap:3rem}
+  .hero-right{order:-1;max-width:380px;margin-inline:auto;width:100%}
+  .term{position:static;width:100%;margin-top:1rem}
+  .status-chip{left:1rem}
+  .proj-grid{grid-template-columns:1fr}
+  .proj-col.offset{margin-top:0}
+  .sec-head p{text-align:left}
+  nav{gap:0;padding:.35rem}
+  nav a{padding:.45rem .6rem;font-size:.65rem}
+}
+</style>
+</head>
+<body>
+
+<div class="backdrop"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain"></div>
+
+<nav class="glass">
+  <a href="#hero">Home</a>
+  <a href="#projects">Projects</a>
+  <a href="#">About</a>
+  <a href="#">Terminal</a>
+  <a class="hire" href="#">Hire me</a>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="kicker rv d1">Hello, I'm</div>
+        <h1 class="rv d2">Devonte<br><em>Huckleberry</em></h1>
+        <div class="role rv d2">Cybersecurity Analyst — SOC &amp; IAM</div>
+        <p class="hero-desc rv d3">I spent years in physical security before moving into cyber, watching access points, documenting incidents, writing reports people actually read. Now I do the same work at the network layer: <strong>threat detection, log analysis, and incident response</strong>, proven in a lab I built myself.</p>
+        <div class="btns rv d4">
+          <a class="btn btn-primary" href="#projects">View my work</a>
+          <a class="btn btn-ghost" href="#">Get in touch</a>
+        </div>
+        <div class="stats rv d4">
+          <div class="stat"><div class="num">2<span>+</span></div><div class="lbl">Certs earned</div></div>
+          <div class="stat-rule"></div>
+          <div class="stat"><div class="num">1</div><div class="lbl">Live incident</div></div>
+          <div class="stat-rule"></div>
+          <div class="stat"><div class="num">10<span>+</span></div><div class="lbl">Yrs IT exp</div></div>
+        </div>
+      </div>
+
+      <div class="hero-right rv d3">
+        <div class="photo-card glass glow">
+          <img src="devonte.jpg" alt="Devonte Huckleberry">
+        </div>
+        <div class="status-chip glass">
+          <span class="dot"></span> Open to work — Chicago, IL
+        </div>
+        <div class="term glass glow rv d5">
+          <div class="term-bar"><i></i><i></i><i></i></div>
+          <div class="ln"><span class="p">devonte@soc</span>:~$ <span class="cmd">whoami</span></div>
+          <div class="out">SOC analyst · IAM-focused · purple-team lab builder</div>
+          <div class="ln"><span class="p">devonte@soc</span>:~$ <span class="cursor"></span></div>
+          <div class="hint">interactive terminal: optional, never blocks the page</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PROJECTS SLICE ════════ -->
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head scroll-rv">
+      <h2>Selected <em>work</em></h2>
+      <p>Real incidents, self-built labs, and the product I'm building.</p>
+    </div>
+
+    <div class="proj-grid">
+      <div class="proj-col">
+
+        <a class="card flagship glass glow scroll-rv" href="#">
+          <div class="tag">Flagship · Purple team</div>
+          <div class="shot">
+<pre>$ <i>GetUserSPNs.py lab.local/lowpriv -request</i>
+<b>[*]</b> ServicePrincipalName : MSSQLSvc/ws01.lab.local
+<b>[*]</b> $krb5tgs$23$*svc_sql$LAB.LOCAL$...
+
+index=sysmon EventCode=4769 Ticket_Encryption_Type=0x17
+| stats count by Account_Name, Service_Name
+<b>→ ALERT:</b> kerberoast pattern · svc_sql · 10.10.10.66</pre>
+          </div>
+          <h3>Active Directory Purple-Team &amp; SOC Lab</h3>
+          <p>A mini-enterprise on a spare laptop. I stand up an AD domain, Kerberoast it from Kali, then catch the attack in Splunk and write the detection. One lab, three skill areas I'm targeting for work: identity, detection, offense.</p>
+          <div class="chips"><span>Active Directory</span><span>Splunk</span><span>Sysmon</span><span>Kerberoasting</span><span>Kali</span></div>
+          <div class="meta"><span>2026 · Phase 1 complete</span><span class="go">Read the build →</span></div>
+        </a>
+
+        <a class="card glass glow scroll-rv" href="#">
+          <div class="tag">Lab · Offense</div>
+          <h3>Metasploitable 2 — vsftpd Backdoor Exploit</h3>
+          <p>Full kill chain in an isolated lab: scan, identify the vsftpd 2.3.4 backdoor, exploit to root, document every step.</p>
+          <div class="meta"><span>Kali · Metasploit · Nmap</span><span class="go">Case study →</span></div>
+        </a>
+
+      </div>
+      <div class="proj-col offset">
+
+        <a class="card glass glow scroll-rv" href="#">
+          <div class="tag">Live incident</div>
+          <h3>Domain Hijack Investigation — ssumcchicago.org</h3>
+          <p>A real organization's domain was hijacked and serving spam. I traced the takeover, documented the evidence, and walked them through recovery. Not a lab.</p>
+          <div class="meta"><span>OSINT · DNS forensics</span><span class="go">Case study →</span></div>
+        </a>
+
+        <a class="card foothold glass glow scroll-rv" href="#">
+          <div class="tag">Founder · Product</div>
+          <h3>Foothold</h3>
+          <p>What I'm building when I'm not in the SOC. Foothold is its own brand, so it gets its own color here.</p>
+          <div class="chips"><span>Product</span><span>Design system</span><span>Security-minded</span></div>
+          <div class="meta"><span>In progress</span><span class="go">Visit →</span></div>
+        </a>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// cursor-tracking conic glow: set --mx/--my per glass card
+document.querySelectorAll('.glow').forEach(el => {
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+    el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+});
+</script>
+</body>
+</html>
