@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, FormEvent } from 'react'
+import { useState, FormEvent } from 'react'
 import GlowButton from './GlowButton'
 import styles from './ContactForm.module.css'
 
@@ -10,7 +10,6 @@ type Status = 'idle' | 'sending' | 'sent' | 'error'
 
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>('idle')
-  const formRef = useRef<HTMLFormElement>(null)
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -47,7 +46,6 @@ export default function ContactForm() {
 
   return (
     <form
-      ref={formRef}
       className={`glass glow ${styles.form}`}
       onSubmit={handleSubmit}
       noValidate

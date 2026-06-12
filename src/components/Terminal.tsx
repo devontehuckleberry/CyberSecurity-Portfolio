@@ -111,7 +111,7 @@ export default function Terminal() {
                 )
               }
               return (
-                <span key={i} className={styles.out}>{entry.text}</span>
+                <div key={i} className={styles.out}>{entry.text}</div>
               )
             })}
             <div className={styles.termLine}>

@@ -1,5 +1,5 @@
 'use client'
-import { useRef, MouseEvent } from 'react'
+import { useRef, MouseEvent, KeyboardEvent } from 'react'
 
 interface GlassCardProps {
   children: React.ReactNode
@@ -22,12 +22,24 @@ export default function GlassCard({ children, className = '', glowColor, style, 
     el.style.setProperty('--my', `${y}%`)
   }
 
+  function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault()
+      onClick()
+    }
+  }
+
+  const interactive = Boolean(onClick)
+
   return (
     <div
       ref={ref}
       className={`glass glow ${className}`}
       onMouseMove={handleMouseMove}
       onClick={onClick}
+      onKeyDown={interactive ? handleKeyDown : undefined}
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
       style={{ position: 'relative', ...style, ...(glowColor ? { '--glow': glowColor } as React.CSSProperties : {}) }}
     >
       {children}

@@ -8,7 +8,7 @@ export default function Footer() {
         <div className={styles.inner}>
           <span>&copy; 2026 Devonte Huckleberry &middot; Chicago, IL</span>
           <nav className={styles.links}>
-            <a href="#about">Top &#x2191;</a>
+            <a href="#hero">Top &#x2191;</a>
             <a href="/Devonte_Huckleberry_Resume.pdf">Resume</a>
             <a href="mailto:DevonteHuckleberry@gmail.com">Email</a>
           </nav>
