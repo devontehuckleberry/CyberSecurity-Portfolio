@@ -1,3 +1,4 @@
+import React from 'react'
 import Image from 'next/image'
 import GlowButton from './GlowButton'
 import Wrap from './Wrap'
@@ -43,10 +44,9 @@ export default function Hero() {
 
             <div className={`${styles.stats} rv d4`}>
               {STATS.map((stat, i) => (
-                <>
-                  {i > 0 && <div key={`rule-${i}`} className={styles.statRule} aria-hidden="true" />}
+                <React.Fragment key={stat.lbl}>
+                  {i > 0 && <div className={styles.statRule} aria-hidden="true" />}
                   <div
-                    key={stat.lbl}
                     className={styles.stat}
                     role="group"
                     aria-label={`${stat.num} ${stat.lbl}`}
@@ -54,7 +54,7 @@ export default function Hero() {
                     <div className={styles.num} aria-hidden="true">{stat.num}</div>
                     <div className={styles.lbl} aria-hidden="true">{stat.lbl}</div>
                   </div>
-                </>
+                </React.Fragment>
               ))}
             </div>
           </div>
@@ -77,9 +77,10 @@ export default function Hero() {
               </div>
             </div>
 
-            <a href="#contact" className={styles.chip}>
-              <span aria-hidden="true">🟢</span>
-              Open to work · Chicago + remote
+            <a href="#contact" className={`${styles.statusLine} rv d4`}>
+              <span className={styles.statusPrompt}>$</span> whoami --status
+              <span className={styles.statusOut}>open_to_work · chicago + remote</span>
+              <span className={styles.statusCursor} aria-hidden="true" />
             </a>
           </div>
         </div>

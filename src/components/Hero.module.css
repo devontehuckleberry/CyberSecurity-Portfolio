@@ -124,17 +124,45 @@
   border-top: 0;
 }
 
-.chip {
+.statusLine {
   display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 999px;
-  padding: 0.65rem 1.2rem;
-  font-size: 0.75rem;
-  text-decoration: none;
-  color: var(--text);
-  border: 1px solid var(--hairline);
+  align-items: baseline;
+  gap: 0.5ch;
   margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--faint);
+  text-decoration: none;
+}
+
+.statusPrompt {
+  color: var(--red);
+}
+
+.statusOut {
+  color: var(--green);
+}
+
+.statusOut::before {
+  content: '→';
+  color: var(--faint);
+  margin-right: 0.5ch;
+}
+
+.statusCursor {
+  width: 0.55ch;
+  height: 1em;
+  background: var(--green);
+  align-self: center;
+  animation: status-blink 1.1s steps(1) infinite;
+}
+
+@keyframes status-blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusCursor { animation: none; }
 }
 
 @media (max-width: 768px) {

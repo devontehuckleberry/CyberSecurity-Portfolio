@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -14,12 +14,19 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-serif",
+  display: "swap",
+});
+
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
 }
 
-const SITE_URL = 'https://cyber-security-portfolio-ten.vercel.app'
+const SITE_URL = 'https://devonte-huckleberry.vercel.app'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -35,13 +42,11 @@ export const metadata: Metadata = {
     url: SITE_URL,
     title: 'Devonte Huckleberry — Cybersecurity Portfolio',
     description: 'SOC-focused analyst with hands-on lab experience in threat detection, log analysis, and incident response. Building toward IAM.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Devonte Huckleberry — Cybersecurity Portfolio',
     description: 'SOC-focused analyst building toward IAM — threat detection, log analysis, incident response.',
-    images: ['/og-image.png'],
   },
   alternates: {
     canonical: SITE_URL,
@@ -58,7 +63,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={ibmPlexMono.variable}>
+    <html lang="en" className={`${ibmPlexMono.variable} ${playfair.variable}`} suppressHydrationWarning>
       <body>
         {children}
         <GlowTracker />

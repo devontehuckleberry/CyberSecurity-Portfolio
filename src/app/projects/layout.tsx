@@ -9,6 +9,7 @@ export default function ProjectsLayout({ children }: { children: React.ReactNode
       <CardNav />
       <div className={styles.page}>
         <div className={styles.inner}>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a className={styles.back} href="/#projects">← Back to portfolio</a>
           {children}
         </div>

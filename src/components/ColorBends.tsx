@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const MAX_COLORS = 8
 
@@ -129,6 +129,7 @@ interface ColorBendsConfig {
 
 interface DisposeHandle {
   dispose: () => void
+  update: (patch: Partial<ColorBendsConfig>) => void
 }
 
 function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): DisposeHandle {
@@ -154,7 +155,7 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
     alpha: true,
     premultipliedAlpha: true,
   })
-  if (!gl) return { dispose() {} }
+  if (!gl) return { dispose() {}, update() {} }
 
   function compile(type: number, src: string): WebGLShader {
     const sh = gl!.createShader(type)!
@@ -173,7 +174,7 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
     console.error('ColorBends shader link failed:', gl.getProgramInfoLog(prog))
     gl.deleteProgram(prog)
-    return { dispose() {} }
+    return { dispose() {}, update() {} }
   }
   gl.useProgram(prog)
 
@@ -247,6 +248,8 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
   let running = true
   let last = performance.now()
   let elapsed = 0
+  let rot = rotation
+  let autoRot = autoRotate
 
   function loop(now: number) {
     if (!running) return
@@ -256,7 +259,7 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
 
     gl!.uniform1f(uTime, elapsed)
 
-    const deg = (rotation % 360) + autoRotate * elapsed
+    const deg = (rot % 360) + autoRot * elapsed
     const rad = (deg * Math.PI) / 180
     gl!.uniform2f(uRot, Math.cos(rad), Math.sin(rad))
 
@@ -275,6 +278,20 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
   rafId = requestAnimationFrame(loop)
 
   return {
+    update(patch) {
+      if (patch.rotation !== undefined) rot = patch.rotation
+      if (patch.autoRotate !== undefined) autoRot = patch.autoRotate
+      if (patch.speed !== undefined) gl!.uniform1f(U('uSpeed'), patch.speed)
+      if (patch.scale !== undefined) gl!.uniform1f(U('uScale'), patch.scale)
+      if (patch.frequency !== undefined) gl!.uniform1f(U('uFrequency'), patch.frequency)
+      if (patch.warpStrength !== undefined) gl!.uniform1f(U('uWarpStrength'), patch.warpStrength)
+      if (patch.mouseInfluence !== undefined) gl!.uniform1f(U('uMouseInfluence'), patch.mouseInfluence)
+      if (patch.parallax !== undefined) gl!.uniform1f(U('uParallax'), patch.parallax)
+      if (patch.noise !== undefined) gl!.uniform1f(U('uNoise'), patch.noise)
+      if (patch.iterations !== undefined) gl!.uniform1i(U('uIterations'), Math.round(patch.iterations))
+      if (patch.intensity !== undefined) gl!.uniform1f(U('uIntensity'), patch.intensity)
+      if (patch.bandWidth !== undefined) gl!.uniform1f(U('uBandWidth'), patch.bandWidth)
+    },
     dispose() {
       running = false
       if (rafId !== null) cancelAnimationFrame(rafId)
@@ -287,28 +304,136 @@ function initColorBends(canvas: HTMLCanvasElement, opts: ColorBendsConfig): Disp
 }
 
 const CONFIG: ColorBendsConfig = {
-  colors: ['#FF4D5A', '#C1121F', '#4A0E14'],
-  rotation: 45,
-  autoRotate: 4,
-  speed: 0.18,
-  scale: 1.4,
-  warpStrength: 1,
-  mouseInfluence: 0.6,
-  parallax: 0.5,
-  noise: 0.07,
-  intensity: 1.15,
+  colors: ['#ea1515', '#C1121F', '#4A0E14'],
+  rotation: 47,
+  autoRotate: 0,
+  speed: 0.26,
+  scale: 0.4,
+  frequency: 1.2,
+  warpStrength: 0.9,
+  mouseInfluence: 1,
+  parallax: 2,
+  noise: 0.15,
+  iterations: 2,
+  intensity: 1.1,
   bandWidth: 6,
   transparent: true,
 }
 
+const SLIDERS: Array<{ key: string; min: number; max: number; step: number }> = [
+  { key: 'scale', min: 0.2, max: 2, step: 0.05 },
+  { key: 'frequency', min: 0.2, max: 3, step: 0.05 },
+  { key: 'rotation', min: 0, max: 360, step: 1 },
+  { key: 'speed', min: 0, max: 1, step: 0.01 },
+  { key: 'warpStrength', min: 0, max: 3, step: 0.05 },
+  { key: 'bandWidth', min: 1, max: 12, step: 0.5 },
+  { key: 'intensity', min: 0.2, max: 3, step: 0.05 },
+  { key: 'noise', min: 0, max: 0.5, step: 0.01 },
+  { key: 'iterations', min: 1, max: 5, step: 1 },
+  { key: 'parallax', min: 0, max: 2, step: 0.05 },
+  { key: 'mouseInfluence', min: 0, max: 2, step: 0.05 },
+]
+
+function TweakPanel({ onChange }: { onChange: (patch: Partial<ColorBendsConfig>) => void }) {
+  const [values, setValues] = useState<Record<string, number>>(() => {
+    const v: Record<string, number> = {}
+    for (const s of SLIDERS) v[s.key] = (CONFIG as unknown as Record<string, number>)[s.key]
+    return v
+  })
+  const [open, setOpen] = useState(true)
+  const [copied, setCopied] = useState(false)
+
+  function set(key: string, raw: string) {
+    const v = Number(raw)
+    setValues((prev) => ({ ...prev, [key]: v }))
+    onChange({ [key]: v })
+  }
+
+  function copyConfig() {
+    const cfg = { ...CONFIG, ...values }
+    navigator.clipboard.writeText(JSON.stringify(cfg, null, 2)).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    })
+  }
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        right: 12,
+        bottom: 12,
+        zIndex: 9999,
+        width: 240,
+        padding: '10px 12px',
+        background: 'rgba(10, 10, 12, 0.92)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        borderRadius: 8,
+        fontFamily: 'monospace',
+        fontSize: 11,
+        color: '#ddd',
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: open ? 8 : 0 }}>
+        <strong>ColorBends tweaks</strong>
+        <button onClick={() => setOpen(!open)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}>
+          {open ? '−' : '+'}
+        </button>
+      </div>
+      {open && (
+        <>
+          {SLIDERS.map((s) => (
+            <label key={s.key} style={{ display: 'block', marginBottom: 6 }}>
+              <span style={{ display: 'flex', justifyContent: 'space-between' }}>
+                {s.key}
+                <span style={{ color: '#ea1515' }}>{values[s.key]}</span>
+              </span>
+              <input
+                type="range"
+                min={s.min}
+                max={s.max}
+                step={s.step}
+                value={values[s.key]}
+                onChange={(e) => set(s.key, e.target.value)}
+                style={{ width: '100%' }}
+              />
+            </label>
+          ))}
+          <button
+            onClick={copyConfig}
+            style={{
+              width: '100%',
+              marginTop: 4,
+              padding: '5px 0',
+              background: copied ? '#1a7f37' : '#ea1515',
+              border: 'none',
+              borderRadius: 4,
+              color: '#fff',
+              fontFamily: 'inherit',
+              cursor: 'pointer',
+            }}
+          >
+            {copied ? 'copied!' : 'copy config'}
+          </button>
+        </>
+      )}
+    </div>
+  )
+}
+
 export default function ColorBends() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const handleRef = useRef<DisposeHandle | null>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     const handle = initColorBends(canvas, CONFIG)
-    return () => handle.dispose()
+    handleRef.current = handle
+    return () => {
+      handle.dispose()
+      handleRef.current = null
+    }
   }, [])
 
   return (
@@ -334,6 +459,9 @@ export default function ColorBends() {
             'linear-gradient(180deg, oklch(0% 0 0 / 30%), transparent 30%, transparent 75%, oklch(0% 0 0 / 35%)), radial-gradient(ellipse 70% 60% at 28% 42%, oklch(0% 0 0 / 38%), transparent 70%)',
         }}
       />
+      {process.env.NODE_ENV === 'development' && (
+        <TweakPanel onChange={(patch) => handleRef.current?.update(patch)} />
+      )}
     </>
   )
 }
