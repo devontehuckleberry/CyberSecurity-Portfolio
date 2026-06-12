@@ -18,7 +18,7 @@ export default function Hero() {
           <div>
             <h1 className={styles.heading}>
               Devonte<br />
-              <em>Huckleberry</em>
+              <span className={styles.headingAccent}>Huckleberry</span>
             </h1>
 
             <p className={styles.role}>Security · Identity · IT Operations</p>
@@ -43,13 +43,18 @@ export default function Hero() {
 
             <div className={styles.stats}>
               {STATS.map((stat, i) => (
-                <div key={stat.lbl} style={{ display: 'contents' }}>
-                  {i > 0 && <div className={styles.statRule} aria-hidden="true" />}
-                  <div className={styles.stat}>
-                    <div className={styles.num}>{stat.num}</div>
-                    <div className={styles.lbl}>{stat.lbl}</div>
+                <>
+                  {i > 0 && <div key={`rule-${i}`} className={styles.statRule} aria-hidden="true" />}
+                  <div
+                    key={stat.lbl}
+                    className={styles.stat}
+                    role="group"
+                    aria-label={`${stat.num} ${stat.lbl}`}
+                  >
+                    <div className={styles.num} aria-hidden="true">{stat.num}</div>
+                    <div className={styles.lbl} aria-hidden="true">{stat.lbl}</div>
                   </div>
-                </div>
+                </>
               ))}
             </div>
           </div>
@@ -65,6 +70,7 @@ export default function Hero() {
                   alt="Devonte Huckleberry"
                   width={420}
                   height={525}
+                  sizes="(max-width: 768px) 340px, 420px"
                   className={styles.photo}
                   priority
                 />
@@ -72,7 +78,7 @@ export default function Hero() {
             </div>
 
             <a href="#contact" className={styles.chip}>
-              <span>🟢</span>
+              <span aria-hidden="true">🟢</span>
               Open to work · Chicago + remote
             </a>
           </div>

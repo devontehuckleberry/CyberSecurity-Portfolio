@@ -14,7 +14,7 @@
 }
 
 .issuer {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--red);
@@ -38,5 +38,11 @@
 @media (max-width: 768px) {
   .row {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: 1fr;
   }
 }
