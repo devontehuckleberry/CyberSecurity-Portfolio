@@ -1,0 +1,49 @@
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.95rem 1.7rem;
+  clip-path: var(--chamfer);
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: opacity 0.2s;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.btn:hover::after { opacity: 1; }
+
+.primary {
+  color: #fff;
+  background: linear-gradient(180deg, var(--red), var(--red-deep));
+}
+
+.primary::after {
+  background: oklch(from var(--red) calc(l + 0.12) c h);
+}
+
+.ghost {
+  color: var(--text);
+  background: oklch(100% 0 0 / 6%);
+  outline: 1px solid var(--hairline);
+  outline-offset: -1px;
+}
+
+.ghost::after {
+  background: linear-gradient(180deg, var(--red), var(--red-deep));
+}
