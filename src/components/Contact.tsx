@@ -1,4 +1,5 @@
 import Wrap from '@/components/Wrap'
+import ContactForm from './ContactForm'
 import styles from './Contact.module.css'
 
 const LINKS = [
@@ -70,13 +71,7 @@ export default function Contact() {
             ))}
           </div>
 
-          <div className={styles.formPlaceholder}>
-            <p>
-              Contact form coming in Phase 6.
-              <br />
-              <code>src/components/ContactForm.tsx</code>
-            </p>
-          </div>
+          <ContactForm />
         </div>
       </Wrap>
     </section>
